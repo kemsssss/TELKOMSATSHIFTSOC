@@ -128,113 +128,106 @@
     <h1>BERITA ACARA</h1>
     <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
 
-    <div class="section">
-      <label>Petugas Lama</label>
-      <select name="petugas_lama">
-        <option value="">Pilih Petugas Lama</option>
-        <option>Andi - 123456 - Shift 1</option>
-        <option>Budi - 654321 - Shift 2</option>
-        <option>Citra - 112233 - Shift 3</option>
-      </select>
-
-      <label>Petugas Baru</label>
-      <select name="petugas_baru">
-        <option value="">Pilih Petugas Baru</option>
-        <option>Dewi - 445566 - Shift 1</option>
-        <option>Eka - 778899 - Shift 2</option>
-        <option>Fajar - 990011 - Shift 3</option>
-      </select>
-
-      <label>Tanggal Shift</label>
-      <input type="date" name="tanggal_shift" value="{{ date('Y-m-d') }}">
-    </div>
-
-    <div class="section">
-      <label>Tiket yang dibuat</label>
-      <input type="text" name="tiket_nomor" placeholder="Masukkan nomor tiket">
-    </div>
-
-    <div class="section">
-      <label><b>Auto Blocking SOAR</b></label>
-      <ul>
-        <li>SangFOR <input type="number" name="soar_sangfor" value="0"></li>
-        <li>Forti-JTN <input type="number" name="soar_fortijtn" value="0"></li>
-        <li>FortiWeb <input type="number" name="soar_fortiweb" value="0"></li>
-        <li>CheckPoint <input type="number" name="soar_checkpoint" value="0"></li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <label><b>Manual Blocking dan FollowUP</b></label>
-      <ul>
-        <li>
-          Sophos IP
-          <div id="sophos-ip-group" class="multi-input">
-            <div class="input-wrapper">
-              <input type="text" name="sophos_ip[]" placeholder="Masukkan IP">
-            </div>
-          </div>
-        </li>
-        <li>
-          Sophos URL
-          <div id="sophos-url-group" class="multi-input">
-            <div class="input-wrapper">
-              <input type="text" name="sophos_url[]" placeholder="Masukkan URL">
-            </div>
-          </div>
-        </li>
-        <li>
-          VPN
-          <div id="vpn-group" class="multi-input">
-            <div class="input-wrapper">
-              <input type="text" name="vpn[]" placeholder="Masukkan VPN Data">
-            </div>
-          </div>
-        </li>
-        <li>
-          EDR
-          <div id="edr-group" class="multi-input">
-            <div class="input-wrapper">
-              <input type="text" name="edr[]" placeholder="Masukkan EDR Data">
-            </div>
-          </div>
-        </li>
-        <li>
-          Daily Report Magnus
-          <div id="magnus-group" class="multi-input">
-            <div class="input-wrapper">
-              <input type="text" name="magnus[]" placeholder="Masukkan laporan">
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <p>Demikian berita acara ini dibuat dengan sebenar-benarnya sebagai bukti telah dilakukan serah terima shift SOC Telkomsat.</p>
-    </div>
-
-    <form action="{{ route('generate.pdf') }}" method="POST">
+  <form action="{{ route('generate.pdf') }}" method="POST">
     @csrf
 
+    <label>Petugas Lama</label>
+    <select name="petugas_lama_id" required>
+      @foreach ($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }}</option>
+      @endforeach
+    </select>
+
+    <label>Petugas Baru</label>
+    <select name="petugas_baru_id" required>
+      @foreach ($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }}</option>
+      @endforeach
+    </select>
+
+    <label>Tanggal Shift</label>
+    <input type="date" name="tanggal_shift" value="{{ date('Y-m-d') }}">
+        <label>Nomor Tiket</label>
+        <input type="text" name="tiket_nomor" placeholder="#12345">
+        
+<div class="section">
+  <h3>Auto Blocking SOAR</h3>
+  <div>
+    <label for="soar_sangfor">SangFOR:</label>
+    <input type="number" id="soar_sangfor" name="soar_sangfor" value="0" placeholder="Jumlah Sangfor">
+  </div>
+  <label for="soar_fortijtn">Forti-JTN:</label>
+  <div>
+    <input type="number" id="soar_fortijtn" name="soar_fortijtn" value="0" placeholder="Jumlah Forti-JTN">
+  </div>
+  <div>
+    <label for="soar_fortiweb">FortiWeb:</label>
+    <input type="number" id="soar_fortiweb" name="soar_fortiweb" value="0" placeholder="Jumlah FortiWeb">
+  </div>
+  <div>
+    <label for="soar_checkpoint">CheckPoint:</label>
+    <input type="number" id="soar_checkpoint" name="soar_checkpoint" value="0" placeholder="Jumlah CheckPoint">
+  </div>
+</div>
+
+<!-- MANUAL BLOCKING DAN FOLLOWUP -->
+<div class="section">
+  <h3>Manual Blocking dan FollowUP</h3>
+
+  <div id="sophos-ip-group">
+    <label>Sophos IP:</label>
+    <input type="text" name="sophos_ip[]" placeholder="Masukkan IP">
+  </div>
+
+  <div id="sophos-url-group">
+    <label>Sophos URL:</label>
+    <input type="text" name="sophos_url[]" placeholder="Masukkan URL">
+  </div>
+
+  <div id="vpn-group">
+    <label>VPN:</label>
+    <input type="text" name="vpn[]" placeholder="Masukkan VPN">
+  </div>
+
+  <div id="edr-group">
+    <label>EDR:</label>
+    <input type="text" name="edr[]" placeholder="Masukkan EDR">
+  </div>
+
+  <div id="magnus-group">
+    <label>Daily Report Magnus:</label>
+    <input type="text" name="magnus[]" placeholder="Masukkan laporan Magnus">
+  </div>
+</div>
+</ul>
+
+<div class="section">
+  <p>Demikian berita acara ini dibuat dengan sebenar-benarnya sebagai bukti telah dilakukan serah terima shift SOC Telkomsat.</p>
+</div>
+
+<form action="{{ route('generate.pdf') }}" method="POST">
+    @csrf
+    
     <label>Petugas Lama:</label>
     <select name="petugas_lama_id" required>
-        @foreach($petugas as $p)
-            <option value="{{ $p->id }}">{{ $p->nama }}</option>
+      @foreach($petugas as $p)
+      <option value="{{ $p->id }}">{{ $p->nama }}</option>
         @endforeach
-    </select>
-
-    <label>Petugas Baru:</label>
+      </select>
+      
+      <label>Petugas Baru:</label>
     <select name="petugas_baru_id" required>
-        @foreach($petugas as $p)
-            <option value="{{ $p->id }}">{{ $p->nama }}</option>
-        @endforeach
+      @foreach($petugas as $p)
+      <option value="{{ $p->id }}">{{ $p->nama }}</option>
+      @endforeach
     </select>
-
-    <button type="submit">Generate PDF</button>
-</form>
-
     
+    <button type="submit">Generate PDF</button>
+  </form>
+  
+  
+</div>
+</div>
 
   <script>
     function setupDynamicInput(groupId, inputName) {
