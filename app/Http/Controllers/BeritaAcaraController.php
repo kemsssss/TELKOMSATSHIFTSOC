@@ -54,6 +54,6 @@ class BeritaAcaraController extends Controller
         ];
     
 
-        return Pdf::loadView('berita-acara', $data)->stream('berita-acara.pdf');
+        return Pdf::loadView('berita-acara', $data)->stream('Serah Terima Shift SOC Telkomsat.pdf');
     }
 }
