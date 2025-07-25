@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Petugas;
+use App\Models\BeritaAcara;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -34,10 +35,34 @@ class BeritaAcaraController extends Controller
         $lama_ttd = file_exists($lamaTtdPath) ? base64_encode(file_get_contents($lamaTtdPath)) : '';
         $baru_ttd = file_exists($baruTtdPath) ? base64_encode(file_get_contents($baruTtdPath)) : '';
 
+        BeritaAcara::create([
+            'lama_nama'      => $petugasLama->nama,
+            'lama_nik'       => $petugasLama->nik,
+            'lama_shift'     => $request->input('shift'),
+        
+            'baru_nama'      => $petugasBaru->nama,
+            'baru_nik'       => $petugasBaru->nik,
+            'baru_shift'     => $request->input('shift'),
+        
+            'tiket'          => $request->input('tiket_nomor'),
+            'sangfor'        => $request->input('soar_sangfor'),
+            'jtn'            => $request->input('soar_fortijtn'),
+            'web'            => $request->input('soar_fortiweb'),
+            'checkpoint'     => $request->input('soar_checkpoint'),
+        
+            'sophos_ip'      => is_array($request->input('sophos_ip')) ? implode(',', $request->input('sophos_ip')) : '',
+            'sophos_url'     => is_array($request->input('sophos_url')) ? implode(',', $request->input('sophos_url')) : '',
+            'vpn'            => is_array($request->input('vpn')) ? implode(',', $request->input('vpn')) : '',
+            'edr'            => is_array($request->input('edr')) ? implode(',', $request->input('edr')) : '',
+            'daily_report'   => is_array($request->input('magnus')) ? implode(',', $request->input('magnus')) : '',
+        ]);
+        
+
         // Ambil data isian tambahan
         $data = [
             'petugas_lama' => $petugasLama,
             'petugas_baru' => $petugasBaru,
+            'shift' => $request->input('shift'),
             'lama_ttd' => $lama_ttd,
             'baru_ttd' => $baru_ttd,
             'tanggal_shift' => $request->input('tanggal_shift'),
@@ -54,6 +79,6 @@ class BeritaAcaraController extends Controller
         ];
     
 
-        return Pdf::loadView('berita-acara', $data)->stream('Serah Terima Shift SOC Telkomsat.pdf');
+        return Pdf::loadView('berita-acara', $data)->stream('serah terima shift SOC.pdf');
     }
 }

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Berita Acara Shift SOC Telkomsat</title>
   <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">  
 </head>
 <body>
   <div class="container">
@@ -23,12 +23,26 @@
       @endforeach
     </select>
 
+          <label>Shift</label>
+      <select name="shift" required>
+        <option value="">-- Pilih Shift --</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+
     <label>Petugas Baru</label>
     <select name="petugas_baru_id" required>
       @foreach ($petugas as $p)
         <option value="{{ $p->id }}">{{ $p->nama }}</option>
       @endforeach
     </select>
+
+  <label for="shift">Shift:</label>
+  <select name="shift" id="shift" required>
+    <option value="">-- Pilih Shift --</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+      </select>
 
     <label>Tanggal Shift</label>
     <input type="date" name="tanggal_shift" value="{{ date('Y-m-d') }}">
@@ -61,7 +75,7 @@
 
   <div id="sophos-ip-group">
     <label>Sophos IP:</label>
-    <input type="text" name="sophos_ip[]" placeholder="Masukkan IP">
+    <input type="text" name="sophos_ip[]" placeholder="Mauskan IP">
   </div>
 
   <div id="sophos-url-group">

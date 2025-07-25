@@ -35,27 +35,21 @@
       margin-left: 20px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .ttd-table td {
+    .ttd-area {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
       text-align: center;
-      vertical-align: top;
-      width: 50%;
-      padding-top: 40px;
     }
 
-    .ttd-table img {
-      margin-bottom: 10px;
+    .ttd-area div {
+      width: 45%;
     }
 
     .ttd-label {
+      margin-top: 60px;
       text-decoration: underline;
       font-weight: bold;
-      display: inline-block;
-      margin-top: 10px;
     }
 
     @media print {
@@ -72,27 +66,24 @@
 </head>
 <body>
 
-  {{-- Logo Telkomsat --}}
   <div class="logo">
     <img src="{{ public_path('logo_telkomsat.png') }}" alt="Telkomsat Logo">
   </div>
 
   <h2>BERITA ACARA SERAH TERIMA SHIFT SOC <span style="color: red;">TELKOMSAT</span></h2>
 
-  {{-- Data Petugas --}}
   <div class="section">
     <p><strong>Yang bertanda tangan di bawah ini:</strong></p>
     <p>Nama: {{ $petugas_lama->nama }}</p>
     <p>NIK: {{ $petugas_lama->nik }}</p>
-    <p>Shift: {{ $petugas_lama->shift }}</p>
+    <p>Shift: {{ $shift }}</p>
 
     <p><strong>Serah terima shift dengan:</strong></p>
     <p>Nama: {{ $petugas_baru->nama }}</p>
     <p>NIK: {{ $petugas_baru->nik }}</p>
-    <p>Shift: {{ $petugas_baru->shift }}</p>
+    <p>Shift: {{ $shift }}</p>
   </div>
 
-  {{-- Rincian Shift --}}
   <div class="section">
     <p>Pada hari <strong>{{ $tanggal_shift }}</strong>, dengan ini kami melakukan pergantian shift SOC dengan detail pekerjaan sebagai berikut:</p>
 
@@ -125,37 +116,27 @@
     </ol>
   </div>
 
-  {{-- Penutup --}}
   <div class="section">
     <p>Sekian telah kami laksanakan pekerjaan tersebut dengan baik. Demikian berita acara ini dibuat dengan sebaik-baiknya.</p>
   </div>
 
-  {{-- Tanda Tangan --}}
-  <table class="ttd-table">
-    <tr>
-      <td>
-        Petugas Lama<br><br>
-        @if($lama_ttd)
-          <img src="data:image/png;base64,{{ $lama_ttd }}" height="80" alt="TTD Lama"><br>
-        @else
-          <br><br><br><br>
-        @endif
-        <div class="ttd-label">{{ $petugas_lama->nama }}</div><br>
-        NIK: {{ $petugas_lama->nik }}
-      </td>
+  <div class="ttd-area">
+    <div>
+      Petugas Lama<br><br><br>
+      @if($lama_ttd)
+        <img src="data:image/png;base64,{{ $lama_ttd }}" height="80" alt="TTD Lama"><br>
+      @endif
+      <div class="ttd-label">{{ $petugas_lama->nama }}<br>NIK: {{ $petugas_lama->nik }}</div>
+    </div>
 
-      <td>
-        Petugas Baru<br><br>
-        @if($baru_ttd)
-          <img src="data:image/png;base64,{{ $baru_ttd }}" height="80" alt="TTD Baru"><br>
-        @else
-          <br><br><br><br>
-        @endif
-        <div class="ttd-label">{{ $petugas_baru->nama }}</div><br>
-        NIK: {{ $petugas_baru->nik }}
-      </td>
-    </tr>
-  </table>
+    <div>
+      Petugas Baru<br><br><br>
+      @if($baru_ttd)
+        <img src="data:image/png;base64,{{ $baru_ttd }}" height="80" alt="TTD Baru"><br>
+      @endif
+      <div class="ttd-label">{{ $petugas_baru->nama }}<br>NIK: {{ $petugas_baru->nik }}</div>
+    </div>
+  </div>
 
 </body>
 </html>

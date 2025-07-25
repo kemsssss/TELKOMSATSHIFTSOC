@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,21 +10,25 @@ class BeritaAcara extends Model
     use HasFactory;
 
     protected $fillable = [
-        'petugas_lama_id',
-        'petugas_baru_id',
-        'tanggal_shift',
-        'tiket_nomor',
-        'soar_sangfor',
-        'soar_fortijtn',
-        'soar_fortiweb',
-        'soar_checkpoint',
+        'lama_nama',
+        'lama_nik',
+        'lama_shift',
+        'baru_nama',
+        'baru_nik',
+        'baru_shift',
+        'tiket',
+        'sangfor',
+        'jtn',
+        'web',
+        'checkpoint',
         'sophos_ip',
         'sophos_url',
         'vpn',
         'edr',
-        'magnus',
+        'daily_report',
         'lama_ttd',
         'baru_ttd',
+        'tanggal_shift',
     ];
 
     protected $casts = [
@@ -31,6 +36,6 @@ class BeritaAcara extends Model
         'sophos_url' => 'array',
         'vpn' => 'array',
         'edr' => 'array',
-        'magnus' => 'array',
+        'daily_report' => 'array',
     ];
 }
