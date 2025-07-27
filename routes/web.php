@@ -20,4 +20,9 @@ use App\Http\Controllers\BeritaAcaraController;
 
 Route::get('/', [BeritaAcaraController::class, 'showForm'])->name('welcome');
 Route::post('/generate-pdf', [BeritaAcaraController::class, 'cetakPDF'])->name('generate.pdf');
+Route::get('/petugas/{id}', function ($id) {
+    return \App\Models\Petugas::find($id);
+});
+Route::get('/petugas/{id}', [BeritaAcaraController::class, 'getPetugas']);
+
 

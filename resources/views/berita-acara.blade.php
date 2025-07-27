@@ -66,9 +66,12 @@
 </head>
 <body>
 
-  <div class="logo">
-    <img src="{{ public_path('logo_telkomsat.png') }}" alt="Telkomsat Logo">
+@if($logo)
+  <div style="text-align:center; margin-bottom: 20px;">
+    <img src="data:image/png;base64,{{ $logo }}" alt="Logo Telkomsat" style="height: 80px;">
   </div>
+@endif
+
 
   <h2>BERITA ACARA SERAH TERIMA SHIFT SOC <span style="color: red;">TELKOMSAT</span></h2>
 
@@ -137,6 +140,7 @@
       <div class="ttd-label">{{ $petugas_baru->nama }}<br>NIK: {{ $petugas_baru->nik }}</div>
     </div>
   </div>
+
 
 </body>
 </html>

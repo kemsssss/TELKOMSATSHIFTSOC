@@ -9,7 +9,9 @@
 </head>
 <body>
   <div class="container">
-    <img src="{{ asset('assets/Logo-Telkomsat.png') }}" alt="Logo Telkomsat" style="display:block;margin:auto;height:60px;">
+    <img src="{{ asset('storage/logotelkomsat/Logo-Telkomsat.png') }}" alt="Logo Telkomsat" class="mx-auto h-16 mb-6">
+
+
     <h1>BERITA ACARA</h1>
     <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
 
@@ -107,19 +109,36 @@
 <form action="{{ route('generate.pdf') }}" method="POST">
     @csrf
     
-    <label>Petugas Lama:</label>
-    <select name="petugas_lama_id" required>
-      @foreach($petugas as $p)
-      <option value="{{ $p->id }}">{{ $p->nama }}</option>
-        @endforeach
-      </select>
-      
-      <label>Petugas Baru:</label>
-    <select name="petugas_baru_id" required>
-      @foreach($petugas as $p)
-      <option value="{{ $p->id }}">{{ $p->nama }}</option>
-      @endforeach
-    </select>
+
+<label>Petugas Lama:</label>
+<select id="petugas_lama" name="petugas_lama_id" class="border rounded p-2" required>
+    <option value="">Pilih Petugas Lama</option>
+    @foreach($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }}</option>
+    @endforeach
+</select>
+
+<!-- Preview info petugas lama -->
+<div id="info_petugas_lama" class="mt-2">
+    <p><strong>NIK:</strong> <span id="nik_lama"></span></p>
+    <p><strong>TTD:</strong><br><img id="ttd_lama" src="" height="80" /></p>
+</div>
+
+
+<label>Petugas Baru:</label>
+<select id="petugas_baru" name="petugas_baru_id" class="border rounded p-2" required>
+    <option value="">Pilih Petugas Baru</option>
+    @foreach($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }}</option>
+    @endforeach
+</select>
+
+<!-- Preview info petugas baru -->
+<div id="info_petugas_baru" class="mt-2">
+    <p><strong>NIK:</strong> <span id="nik_baru"></span></p>
+    <p><strong>TTD:</strong><br><img id="ttd_baru" src="" height="80" /></p>
+</div>
+
     
     <button type="submit">Generate PDF</button>
   </form>
@@ -167,6 +186,57 @@
     setupDynamicInput('edr-group', 'edr');
     setupDynamicInput('magnus-group', 'magnus');
   </script>
+
+<script>
+document.getElementById('petugas_lama').addEventListener('change', function () {
+    let id = this.value;
+    if (!id) return;
+
+    fetch(`/petugas/${id}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('nik_lama').innerText = data.nik;
+            document.getElementById('ttd_lama').src = `/${data.ttd}`;
+        });
+});
+</script>
+<script>
+function fetchPetugas(id, targetNik, targetTtd) {
+    if (!id) return;
+    fetch(`/petugas/${id}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById(targetNik).innerText = data.nik;
+            document.getElementById(targetTtd).src = `/${data.ttd}`;
+        });
+}
+
+document.getElementById('petugas_lama').addEventListener('change', function () {
+    fetchPetugas(this.value, 'nik_lama', 'ttd_lama');
+});
+document.getElementById('petugas_baru').addEventListener('change', function () {
+    fetchPetugas(this.value, 'nik_baru', 'ttd_baru');
+});
+</script>
+
+
+
+
+
+<script>
+document.getElementById('petugas_lama').addEventListener('change', function () {
+    let id = this.value;
+    if (!id) return;
+
+    fetch(`/petugas/${id}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('nik_lama').innerText = data.nik;
+            document.getElementById('ttd_lama').src = `/${data.ttd}`;
+        });
+});
+</script>
+
 
 </body>
 </html>
