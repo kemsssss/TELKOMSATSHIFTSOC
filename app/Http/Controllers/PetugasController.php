@@ -8,11 +8,20 @@ use Illuminate\Support\Facades\Storage;
 
 class PetugasController extends Controller
 {
-    public function index()
-    {
-        $petugas = Petugas::all();
-        return view('petugas.index', compact('petugas'));
+    public function index(Request $request)
+{
+    $query = Petugas::query();
+
+    if ($request->has('cari')) {
+        $search = $request->input('cari');
+        $query->where('nama', 'like', '%' . $search . '%')
+              ->orWhere('nik', 'like', '%' . $search . '%');
     }
+
+    $petugas = $query->latest()->get();
+
+    return view('petugas.index', compact('petugas'));
+}
 
     public function create()
     {

@@ -3,41 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <title>Daftar Petugas</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .form-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: space-between;
+        }
+
+        .form-bar form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 200px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-green {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background-color: #218838;
+        }
+
+        .btn-yellow {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .btn-yellow:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .alert {
+            padding: 12px;
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        .actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 50px;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 500px) {
+            .form-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            input[type="text"] {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-6">
+<body>
 
-    <h1 class="text-2xl font-bold mb-4">Daftar Petugas</h1>
+    <div class="container">
+        <h1>Daftar Petugas</h1>
 
-<a href="{{ route('petugas.create') }}"
-   class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mb-4">
-   + Tambah Petugas
-</a>
+        <div class="form-bar">
+            <form method="GET" action="{{ route('petugas.index') }}">
+                <input type="text" name="cari" placeholder="Cari nama atau NIK" value="{{ request('cari') }}">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </form>
 
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <a href="{{ route('welcome') }}" class="btn btn-primary">← Kembali ke Beranda</a>
+    <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
+</div>
 
-    @if (session('success'))
-        <div class="bg-green-200 text-green-800 p-2 mt-4 rounded">
-            {{ session('success') }}
         </div>
-    @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        @foreach ($petugas as $p)
-            <div class="bg-white p-4 rounded shadow">
-                <p><strong>Nama:</strong> {{ $p->nama }}</p>
-                <p><strong>NIK:</strong> {{ $p->nik }}</p>
-                <p><strong>TTD:</strong></p>
-                <img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD" class="mt-2 border w-48">
-                <div class="mt-4 flex gap-2">
-                    <a href="{{ route('petugas.edit', $p->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Edit</a>
-                    <form action="{{ route('petugas.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Hapus</button>
-                    </form>
-                </div>
+        @if (session('success'))
+            <div class="alert">
+                {{ session('success') }}
             </div>
-        @endforeach
+        @endif
+
+        <div class="card-grid">
+            @forelse ($petugas as $p)
+                <div class="card">
+                    <p><strong>Nama:</strong> {{ $p->nama }}</p>
+                    <p><strong>NIK:</strong> {{ $p->nik }}</p>
+
+                    @if ($p->ttd)
+                        <img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD {{ $p->nama }}">
+                    @else
+                        <p class="text-red">TTD belum tersedia.</p>
+                    @endif
+
+                    <div class="actions">
+                        <a href="{{ route('petugas.edit', $p->id) }}" class="btn btn-yellow">Edit</a>
+                        <form action="{{ route('petugas.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+            @empty
+                <div class="no-data">Tidak ada data petugas.</div>
+            @endforelse
+        </div>
     </div>
 
 </body>
