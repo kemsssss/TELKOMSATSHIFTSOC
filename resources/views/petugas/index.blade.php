@@ -6,10 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            font-family: sans-serif;
-            background-color: #f3f3f3;
             margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f3f3f3;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background-color: #111;
+            color: white;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 220px;
             padding: 20px;
+            width: 100%;
         }
 
         .container {
@@ -136,6 +169,10 @@
             grid-column: 1 / -1;
         }
 
+        .text-red {
+            color: red;
+        }
+
         @media (max-width: 500px) {
             .form-bar {
                 flex-direction: column;
@@ -143,62 +180,64 @@
             }
 
             input[type="text"] {
-                width: 0%;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    @include('components.sidebar')
 
-    <div class="container">
-        <header>
-            <h1>Daftar Petugas</h1>
-        </header>
+    <div class="main-content">
+        <div class="container">
 
-        <section class="form-bar">
-            <form method="GET" action="{{ route('petugas.index') }}">
-                <input type="text" name="cari" placeholder="Cari nama atau NIK" value="{{ request('cari') }}">
-                <button type="submit" class="btn btn-primary">Cari</button>
-            </form>
+            <header>
+                <h1>Daftar Petugas</h1>
+            </header>
 
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="{{ route('welcome') }}" class="btn btn-primary">← Kembali ke Beranda</a>
-                <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
-            </div>
-        </section>
+            <section class="form-bar">
+                <form method="GET" action="{{ route('petugas.index') }}">
+                    <input type="text" name="cari" placeholder="Cari nama atau NIK" value="{{ request('cari') }}">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                </form>
 
-        @if (session('success'))
-            <div class="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <section class="card-grid">
-            @forelse ($petugas as $p)
-                <div class="card">
-                    <p><strong>Nama:</strong> {{ $p->nama }}</p>
-                    <p><strong>NIK:</strong> {{ $p->nik }}</p>
-
-                    @if ($p->ttd && file_exists(public_path('storage/' . $p->ttd)))
-                        <img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD {{ $p->nama }}">
-                    @else
-                        <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
-                    @endif
-
-                    <div class="actions">
-                        <a href="{{ route('petugas.edit', $p->id) }}" class="btn btn-yellow">Edit</a>
-                        <form action="{{ route('petugas.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Hapus</button>
-                        </form>
-                    </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
                 </div>
-            @empty
-                <div class="no-data">Tidak ada data petugas.</div>
-            @endforelse
-        </section>
-    </div>
+            </section>
 
+            @if (session('success'))
+                <div class="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <section class="card-grid">
+                @forelse ($petugas as $p)
+                    <div class="card">
+                        <p><strong>Nama:</strong> {{ $p->nama }}</p>
+                        <p><strong>NIK:</strong> {{ $p->nik }}</p>
+
+                        @if ($p->ttd && file_exists(public_path('storage/' . $p->ttd)))
+                            <img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD {{ $p->nama }}">
+                        @else
+                            <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
+                        @endif
+
+                        <div class="actions">
+                            <a href="{{ route('petugas.edit', $p->id) }}" class="btn btn-yellow">Edit</a>
+                            <form action="{{ route('petugas.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </form>
+                        </div>
+                    </div>
+                @empty
+                    <div class="no-data">Tidak ada data petugas.</div>
+                @endforelse
+            </section>  
+        </div>
+    </div>
 </body>
 </html>

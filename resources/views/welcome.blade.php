@@ -7,7 +7,16 @@
       <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
       <link rel="stylesheet" href="{{ asset('css/style.css') }}">  
     </head>
+
+    <body style="margin: 0; font-family: Arial, sans-serif; display: flex;">
+
     <body>
+       @include('components.sidebar')
+  </div>
+      <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
+      <div id="jam"></div>
+
+
       <div class="container">
         <img src="https://uploads.onecompiler.io/432w6j563/43ryj9p7w/Logo-Telkomsat.png" alt="Logo Telkomsat" class="mx-auto h-16 mb-6">
 
@@ -18,7 +27,6 @@
       <form action="{{ route('generate.pdf') }}" method="POST">
         @csrf
 
-        <a href="{{ route('petugas.index') }}">+ Tambah Petugas</a>
 
 
         <label>Petugas Lama</label>
@@ -142,7 +150,10 @@
     </div>
 
         
-        <button type="submit">Generate PDF</button>
+<button type="submit" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
+  Generate PDF
+</button>
+
       </form>
       
       
@@ -238,6 +249,26 @@
             });
     });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function updateJam() {
+        const jamElement = document.getElementById('jam');
+        const now = new Date();
+
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const tanggal = now.toLocaleDateString('id-ID', options);
+        const waktu = now.toLocaleTimeString('id-ID');
+
+        jamElement.textContent = `${tanggal} - ${waktu}`;
+    }
+
+    setInterval(updateJam, 1000);
+    updateJam(); // pertama kali
+});
+</script>
+
+
 
 
     </body>

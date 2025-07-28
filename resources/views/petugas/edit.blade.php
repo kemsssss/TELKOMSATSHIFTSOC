@@ -6,14 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            font-family: sans-serif;
-            background-color: #f3f3f3;
             margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f3f3f3;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #111;
+            color: white;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        .main-content {
+            margin-left: 220px;
             padding: 20px;
+            width: 100%;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 600px;
             margin: auto;
             background: #fff;
             padding: 20px;
@@ -23,43 +54,39 @@
 
         h1 {
             margin-bottom: 20px;
-            font-size: 26px;
+            font-size: 28px;
             color: #333;
         }
 
-        label {
+        form label {
             display: block;
             margin-top: 15px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: bold;
         }
 
-        input[type="text"],
-        input[type="file"] {
+        form input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
         }
 
-        .btn {
-            padding: 10px 16px;
+        form button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-weight: bold;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-right: 10px;
-            display: inline-block;
-            text-decoration: none;
         }
 
-        .btn-success {
+        .btn-green {
             background-color: #28a745;
             color: white;
         }
 
-        .btn-success:hover {
+        .btn-green:hover {
             background-color: #218838;
         }
 
@@ -72,44 +99,63 @@
             background-color: #0056b3;
         }
 
-        img {
-            max-width: 150px;
-            height: auto;
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .preview-ttd {
             margin-top: 10px;
+        }
+
+        .preview-ttd img {
+            max-width: 200px;
+            height: auto;
             border: 1px solid #ccc;
             border-radius: 6px;
+        }
+
+        .text-red {
+            color: red;
+            margin-top: 6px;
         }
     </style>
 </head>
 <body>
+    @include('components.sidebar')
 
-    <div class="container">
-        <h1>Edit Data Petugas</h1>
+    <div class="main-content">
+        <div class="container">
+            <h1>Edit Petugas</h1>
 
-        <form action="{{ route('petugas.update', $petugas->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+            <form action="{{ route('petugas.update', $petugas->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-            <label for="nama">Nama Petugas:</label>
-            <input type="text" name="nama" id="nama" value="{{ old('nama', $petugas->nama) }}" required>
+                <label for="nama">Nama</label>
+                <input type="text" name="nama" value="{{ $petugas->nama }}" required>
 
-            <label for="nik">NIK:</label>
-            <input type="text" name="nik" id="nik" value="{{ old('nik', $petugas->nik) }}" required>
+                <label for="nik">NIK</label>
+                <input type="text" name="nik" value="{{ $petugas->nik }}" required>
 
-            <label for="ttd">Upload TTD (jika ingin mengganti):</label>
-            <input type="file" name="ttd" id="ttd" accept="image/*">
+                <label for="ttd">Tanda Tangan (TTD)</label>
+                <input type="file" name="ttd">
 
-            @if ($petugas->ttd && file_exists(public_path('storage/' . $petugas->ttd)))
-                <p>TTD saat ini:</p>
-                <img src="{{ asset('storage/' . $petugas->ttd) }}" alt="TTD {{ $petugas->nama }}">
-            @endif
+                <div class="preview-ttd">
+                    @if ($petugas->ttd && file_exists(public_path('storage/' . $petugas->ttd)))
+                        <img src="{{ asset('storage/' . $petugas->ttd) }}" alt="TTD {{ $petugas->nama }}">
+                    @else
+                        <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
+                    @endif
+                </div>
 
-            <br>
-
-            <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-            <a href="{{ route('petugas.index') }}" class="btn btn-primary">← Kembali</a>
-        </form>
+                <div class="form-actions">
+                    <button type="submit" class="btn-green">Simpan</button>
+                    <a href="{{ route('petugas.index') }}" class="btn-primary" style="text-decoration: none; padding: 10px 20px;">← Kembali</a>
+                </div>
+            </form>
+        </div>
     </div>
-
 </body>
 </html>
