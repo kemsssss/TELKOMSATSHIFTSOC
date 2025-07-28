@@ -18,7 +18,7 @@
       <form action="{{ route('generate.pdf') }}" method="POST">
         @csrf
 
-        <a href="{{ route('petugas.index') }}">Kelola Petugas</a>
+        <a href="{{ route('petugas.index') }}">+ Tambah Petugas</a>
 
 
         <label>Petugas Lama</label>

@@ -67,8 +67,8 @@
         }
 
         .btn-back {
-            background-color: #e5e7eb;
-            color: #333;
+            background-color: #007bff;
+            color: #ffffff;
         }
 
         .btn-back:hover {
@@ -76,13 +76,13 @@
         }
 
         .btn-submit {
-            background-color: #2563eb;
+            background-color: #28a745;
             color: #fff;
             border: none;
         }
 
         .btn-submit:hover {
-            background-color: #1d4ed8;
+            background-color: #155724;
         }
 
         .error-box {

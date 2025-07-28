@@ -107,7 +107,7 @@
         }
 
         .card img {
-            max-width: 100%;
+            max-width: 150px;
             height: auto;
             border: 1px solid #ccc;
             border-radius: 6px;
@@ -143,7 +143,7 @@
             }
 
             input[type="text"] {
-                width: 100%;
+                width: 0%;
             }
         }
     </style>

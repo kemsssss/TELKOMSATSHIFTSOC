@@ -82,10 +82,11 @@
 <body>
 
 @if($logo)
-  <div class="logo">
-    <img src="data:image/png;base64,{{ $logo }}" alt="Logo Telkomsat">
-  </div>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ $logo }}" alt="Logo Telkomsat" style="height: 60px;">
+    </div>
 @endif
+
 
 <h2>BERITA ACARA SERAH TERIMA SHIFT SOC <span style="color: red;">TELKOMSAT</span></h2>
 
