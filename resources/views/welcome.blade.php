@@ -9,7 +9,7 @@
     </head>
     <body>
       <div class="container">
-        <img src="{{ asset('storage/logotelkomsat/Logo-Telkomsat.png') }}" alt="Logo Telkomsat" class="mx-auto h-16 mb-6">
+        <img src="https://uploads.onecompiler.io/432w6j563/43ryj9p7w/Logo-Telkomsat.png" alt="Logo Telkomsat" class="mx-auto h-16 mb-6">
 
 
         <h1>BERITA ACARA</h1>
@@ -124,7 +124,6 @@
     <!-- Preview info petugas lama -->
     <div id="info_petugas_lama" class="mt-2">
         <p><strong>NIK:</strong> <span id="nik_lama"></span></p>
-        <p><strong>TTD:</strong><br><img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD Petugas" class="w-20 h-auto border rounded">
 </p>
     </div>
 
@@ -140,7 +139,6 @@
     <!-- Preview info petugas baru -->
     <div id="info_petugas_baru" class="mt-2">
         <p><strong>NIK:</strong> <span id="nik_baru"></span></p>
-        <p><strong>TTD:</strong><br><img id="ttd_baru" src="" height="80" /></p>
     </div>
 
         

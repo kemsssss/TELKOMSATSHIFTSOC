@@ -137,12 +137,21 @@
   <p>Sekian telah kami laksanakan pekerjaan tersebut dengan baik. Demikian berita acara ini dibuat dengan sebaik-baiknya.</p>
 </div>
 
+@php
+  $ttdLamaPath = public_path('storage/' . $petugas_lama->ttd);
+  $ttdBaruPath = public_path('storage/' . $petugas_baru->ttd);
+  $ttdLamaBase64 = file_exists($ttdLamaPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($ttdLamaPath)) : null;
+  $ttdBaruBase64 = file_exists($ttdBaruPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($ttdBaruPath)) : null;
+@endphp
+
 <table>
   <tr>
     <td>
       Petugas Lama<br><br>
-      @if($lama_ttd)
-        <img src="data:image/png;base64,{{ $lama_ttd }}" height="150" alt="TTD Lama"><br>
+      @if ($ttdLamaBase64)
+        <img src="{{ $ttdLamaBase64 }}" height="150" alt="TTD Petugas Lama"><br>
+      @else
+        <p class="text-red">TTD belum tersedia</p>
       @endif
       <div class="ttd-label">
         <strong>{{ $petugas_lama->nama }}</strong><br>
@@ -151,8 +160,10 @@
     </td>
     <td>
       Petugas Baru<br><br>
-      @if($baru_ttd)
-        <img src="data:image/png;base64,{{ $baru_ttd }}" height="150" alt="TTD Baru"><br>
+      @if ($ttdBaruBase64)
+        <img src="{{ $ttdBaruBase64 }}" height="150" alt="TTD Petugas Baru"><br>
+      @else
+        <p class="text-red">TTD belum tersedia</p>
       @endif
       <div class="ttd-label">
         <strong>{{ $petugas_baru->nama }}</strong><br>

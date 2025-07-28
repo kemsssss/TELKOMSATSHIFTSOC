@@ -53,6 +53,8 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary {
@@ -149,20 +151,21 @@
 <body>
 
     <div class="container">
-        <h1>Daftar Petugas</h1>
+        <header>
+            <h1>Daftar Petugas</h1>
+        </header>
 
-        <div class="form-bar">
+        <section class="form-bar">
             <form method="GET" action="{{ route('petugas.index') }}">
                 <input type="text" name="cari" placeholder="Cari nama atau NIK" value="{{ request('cari') }}">
                 <button type="submit" class="btn btn-primary">Cari</button>
             </form>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-    <a href="{{ route('welcome') }}" class="btn btn-primary">← Kembali ke Beranda</a>
-    <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
-</div>
-
-        </div>
+                <a href="{{ route('welcome') }}" class="btn btn-primary">← Kembali ke Beranda</a>
+                <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
+            </div>
+        </section>
 
         @if (session('success'))
             <div class="alert">
@@ -170,16 +173,16 @@
             </div>
         @endif
 
-        <div class="card-grid">
+        <section class="card-grid">
             @forelse ($petugas as $p)
                 <div class="card">
                     <p><strong>Nama:</strong> {{ $p->nama }}</p>
                     <p><strong>NIK:</strong> {{ $p->nik }}</p>
 
-                    @if ($p->ttd)
+                    @if ($p->ttd && file_exists(public_path('storage/' . $p->ttd)))
                         <img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD {{ $p->nama }}">
                     @else
-                        <p class="text-red">TTD belum tersedia.</p>
+                        <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
                     @endif
 
                     <div class="actions">
@@ -194,7 +197,7 @@
             @empty
                 <div class="no-data">Tidak ada data petugas.</div>
             @endforelse
-        </div>
+        </section>
     </div>
 
 </body>
