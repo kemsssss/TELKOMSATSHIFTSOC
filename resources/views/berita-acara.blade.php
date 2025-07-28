@@ -81,12 +81,16 @@
 </head>
 <body>
 
-@if($logo)
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="{{ $logo }}" alt="Logo Telkomsat" style="height: 60px;">
-    </div>
-@endif
+@php
+  $logoPath = public_path('storage/logotelkomsat/Logo-Telkomsat.png'); // Ganti sesuai nama file logo Anda
+  $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : null;
+@endphp
 
+@if($logoBase64)
+  <div class="logo">
+    <img src="{{ $logoBase64 }}" alt="Logo Telkomsat">
+  </div>
+@endif
 
 <h2>BERITA ACARA SERAH TERIMA SHIFT SOC <span style="color: red;">TELKOMSAT</span></h2>
 

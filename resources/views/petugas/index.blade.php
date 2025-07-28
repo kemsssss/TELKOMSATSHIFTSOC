@@ -4,186 +4,7 @@
     <meta charset="UTF-8">
     <title>Daftar Petugas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #f3f3f3;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 220px;
-            background-color: #111;
-            color: white;
-            height: 100vh;
-            padding-top: 20px;
-            position: fixed;
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-        }
-
-        .sidebar a:hover {
-            background-color: #575757;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 220px;
-            padding: 20px;
-            width: 100%;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 28px;
-            color: #333;
-        }
-
-        .form-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: space-between;
-        }
-
-        .form-bar form {
-            display: flex;
-            gap: 10px;
-        }
-
-        input[type="text"] {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 200px;
-        }
-
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-green {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-green:hover {
-            background-color: #218838;
-        }
-
-        .btn-yellow {
-            background-color: #ffc107;
-            color: #333;
-        }
-
-        .btn-yellow:hover {
-            background-color: #e0a800;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #fdfdfd;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 16px;
-        }
-
-        .card img {
-            max-width: 150px;
-            height: auto;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
-        .alert {
-            padding: 12px;
-            background-color: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-            margin-bottom: 20px;
-            border-radius: 6px;
-        }
-
-        .actions {
-            margin-top: 12px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .no-data {
-            text-align: center;
-            color: #999;
-            padding: 50px;
-            grid-column: 1 / -1;
-        }
-
-        .text-red {
-            color: red;
-        }
-
-        @media (max-width: 500px) {
-            .form-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            input[type="text"] {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/petugas.css') }}">  
 </head>
 <body>
     @include('components.sidebar')
@@ -191,19 +12,18 @@
     <div class="main-content">
         <div class="container">
 
-            <header>
+        <div id="jam" class="jam-float-kanan">Memuat waktu...</div>
+            <header class="header-bar">
                 <h1>Daftar Petugas</h1>
             </header>
 
+            <!-- Form Pencarian dan Tambah -->
             <section class="form-bar">
                 <form method="GET" action="{{ route('petugas.index') }}">
                     <input type="text" name="cari" placeholder="Cari nama atau NIK" value="{{ request('cari') }}">
                     <button type="submit" class="btn btn-primary">Cari</button>
                 </form>
-
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
-                </div>
+                <a href="{{ route('petugas.create') }}" class="btn btn-green">+ Tambah Petugas</a>
             </section>
 
             @if (session('success'))
@@ -212,6 +32,7 @@
                 </div>
             @endif
 
+            <!-- Daftar Petugas -->
             <section class="card-grid">
                 @forelse ($petugas as $p)
                     <div class="card">
@@ -236,8 +57,27 @@
                 @empty
                     <div class="no-data">Tidak ada data petugas.</div>
                 @endforelse
-            </section>  
+            </section>
+
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateJam() {
+                const jamElement = document.getElementById('jam');
+                const now = new Date();
+
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                const tanggal = now.toLocaleDateString('id-ID', options);
+                const waktu = now.toLocaleTimeString('id-ID');
+
+                jamElement.textContent = `${tanggal} - ${waktu}`;
+            }
+
+            setInterval(updateJam, 1000);
+            updateJam(); // inisialisasi awal
+        });
+    </script>
 </body>
 </html>

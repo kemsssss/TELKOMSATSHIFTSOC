@@ -151,7 +151,7 @@
 
         
 <button type="submit" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
-  Generate PDF
+  Simpan
 </button>
 
       </form>
