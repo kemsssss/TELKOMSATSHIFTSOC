@@ -2,27 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaAcaraController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+use App\Http\Controllers\PetugasController;
+use App\Models\Petugas;
 
 Route::get('/', [BeritaAcaraController::class, 'showForm'])->name('welcome');
 Route::post('/generate-pdf', [BeritaAcaraController::class, 'cetakPDF'])->name('generate.pdf');
-Route::get('/petugas/{id}', function ($id) {
-    return \App\Models\Petugas::find($id);
-});
-Route::get('/petugas/{id}', [BeritaAcaraController::class, 'getPetugas']);
 
+// Tambahan untuk AJAX jika dibutuhkan (bukan untuk web UI)
+Route::get('/api/petugas/{id}', function ($id) {
+    return Petugas::findOrFail($id);
+});
+
+// Resource utama Petugas
+Route::resource('petugas', PetugasController::class);
 

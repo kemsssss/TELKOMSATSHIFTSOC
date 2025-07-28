@@ -38,7 +38,7 @@
   .container > img {
     margin: 30px auto 20px !important;
     display: block !important;
-    height: 80px !important;
+    height: 40px !important;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
   }
   
