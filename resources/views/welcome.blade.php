@@ -18,7 +18,7 @@
 
 
       <div class="container">
-        <img src="https://uploads.onecompiler.io/432w6j563/43ryj9p7w/Logo-Telkomsat.png" alt="Logo Telkomsat" class="mx-auto h-16 mb-6">
+        <img src="https://uploads.onecompiler.io/432w6j563/43ryj9p7w/Logo-Telkomsat.png" alt="Logo Telkomsat" class="mx-auto h-14 mb-6">
 
 
         <h1>BERITA ACARA</h1>
