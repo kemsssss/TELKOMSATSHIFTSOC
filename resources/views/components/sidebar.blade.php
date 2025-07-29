@@ -2,6 +2,7 @@
     <h2 style="color: red; text-align: center;">MENU</h2>
     
     <a href="{{ url('/') }}">🏠 Dashboard</a>
+    <a href="{{ url('/table') }}">📋 Daftar Berita Acara</a>
     <a href="{{ url('/petugas') }}">📋 Daftar Petugas</a>
     <a href="{{ url('/petugas/create') }}">➕ Tambah Petugas</a>
 </div>

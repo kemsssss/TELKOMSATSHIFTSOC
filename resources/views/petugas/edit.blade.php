@@ -9,6 +9,9 @@
 <body>
     @include('components.sidebar')
 
+          <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
+      <div id="jam"></div>
+      
     <div class="main-content">
         <div class="container">
             <h1>Edit Petugas</h1>
@@ -42,5 +45,23 @@
         </div>
     </div>
 </body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function updateJam() {
+        const jamElement = document.getElementById('jam');
+        const now = new Date();
+
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const tanggal = now.toLocaleDateString('id-ID', options);
+        const waktu = now.toLocaleTimeString('id-ID');
+
+        jamElement.textContent = `${tanggal} - ${waktu}`;
+    }
+
+    setInterval(updateJam, 1000);
+    updateJam(); // pertama kali
+});
+</script>
 
 </html>

@@ -18,7 +18,6 @@ class BeritaAcaraController extends Controller
 
     public function cetakPDF(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'petugas_lama_id' => 'required|exists:petugas,id',
             'petugas_baru_id' => 'required|exists:petugas,id',
@@ -26,18 +25,13 @@ class BeritaAcaraController extends Controller
             'tanggal_shift' => 'required|date',
         ]);
 
-        // Ambil data petugas
         $petugasLama = Petugas::findOrFail($validated['petugas_lama_id']);
         $petugasBaru = Petugas::findOrFail($validated['petugas_baru_id']);
 
-        // Base64 tanda tangan
         $lama_ttd = $this->getBase64FromStorage($petugasLama->ttd);
         $baru_ttd = $this->getBase64FromStorage($petugasBaru->ttd);
-
-        // Base64 logo
         $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
 
-        // Simpan ke database
         BeritaAcara::create([
             'lama_nama'    => $petugasLama->nama,
             'lama_nik'     => $petugasLama->nik,
@@ -50,14 +44,13 @@ class BeritaAcaraController extends Controller
             'jtn'          => $request->input('soar_fortijtn'),
             'web'          => $request->input('soar_fortiweb'),
             'checkpoint'   => $request->input('soar_checkpoint'),
-            'sophos_ip'    => implode(',', $request->input('sophos_ip', [])),
-            'sophos_url'   => implode(',', $request->input('sophos_url', [])),
-            'vpn'          => implode(',', $request->input('vpn', [])),
-            'edr'          => implode(',', $request->input('edr', [])),
-            'daily_report' => implode(',', $request->input('magnus', [])),
+            'sophos_ip'    => implode("\n", $request->input('sophos_ip', [])),
+            'sophos_url'   => implode("\n", $request->input('sophos_url', [])),
+            'vpn'          => implode("\n", $request->input('vpn', [])),
+            'edr'          => implode("\n", $request->input('edr', [])),
+            'daily_report' => implode("\n", $request->input('magnus', [])),
         ]);
 
-        // Data PDF
         $data = [
             'petugas_lama'   => $petugasLama,
             'petugas_baru'   => $petugasBaru,
@@ -104,5 +97,59 @@ class BeritaAcaraController extends Controller
             'nik' => $petugas->nik,
             'ttd' => $petugas->ttd,
         ]);
+    }
+
+    public function index()
+    {
+        $beritaAcaras = BeritaAcara::all();
+        return view('table', compact('beritaAcaras'));
+    }
+
+    public function edit($id)
+    {
+        $beritaAcara = BeritaAcara::findOrFail($id);
+        return view('edittable', compact('beritaAcara'));
+    }
+
+public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'tiket'        => 'nullable|string',
+        'sangfor'      => 'nullable|string',
+        'jtn'          => 'nullable|string',
+        'web'          => 'nullable|string',
+        'checkpoint'   => 'nullable|string',
+        'sophos_ip'    => 'nullable|string',
+        'sophos_url'   => 'nullable|string',
+        'vpn'          => 'nullable|string',
+        'edr'          => 'nullable|string',
+        'daily_report' => 'nullable|string',
+    ]);
+
+    $beritaAcara = BeritaAcara::findOrFail($id);
+
+    $beritaAcara->update([
+        'tiket'        => $validated['tiket'] ?? '',
+        'sangfor'      => $validated['sangfor'] ?? '',
+        'jtn'          => $validated['jtn'] ?? '',
+        'web'          => $validated['web'] ?? '',
+        'checkpoint'   => $validated['checkpoint'] ?? '',
+        'sophos_ip'    => $validated['sophos_ip'] ?? '',
+        'sophos_url'   => $validated['sophos_url'] ?? '',
+        'vpn'          => $validated['vpn'] ?? '',
+        'edr'          => $validated['edr'] ?? '',
+        'daily_report' => $validated['daily_report'] ?? '',
+    ]);
+
+    return redirect()->route('table')->with('success', 'Data Berita Acara berhasil diperbarui.');
+}
+
+
+
+    public function destroy($id)
+    {
+        $beritaAcara = BeritaAcara::findOrFail($id);
+        $beritaAcara->delete();
+        return redirect()->route('table')->with('success', 'Data berhasil dihapus.');
     }
 }

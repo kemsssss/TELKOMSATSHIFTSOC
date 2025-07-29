@@ -16,3 +16,12 @@ Route::get('/api/petugas/{id}', function ($id) {
 // Resource utama Petugas
 Route::resource('petugas', PetugasController::class);
 
+
+Route::get('/table', [BeritaAcaraController::class, 'index'])->name('table');
+Route::resource('beritaacara', BeritaAcaraController::class);
+Route::get('/table', [BeritaAcaraController::class, 'index'])->name('table');
+Route::put('/table/{id}', [BeritaAcaraController::class, 'update'])->name('table.update');
+Route::delete('/table/{id}', [BeritaAcaraController::class, 'destroy'])->name('table.destroy');
+Route::put('/beritaacara/{id}', [BeritaAcaraController::class, 'update'])->name('beritaacara.update');
+
+

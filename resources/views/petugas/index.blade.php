@@ -12,7 +12,9 @@
     <div class="main-content">
         <div class="container">
 
-        <div id="jam" class="jam-float-kanan">Memuat waktu...</div>
+                  <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
+      <div id="jam"></div>
+    
             <header class="header-bar">
                 <h1>Daftar Petugas</h1>
             </header>
@@ -62,22 +64,22 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function updateJam() {
-                const jamElement = document.getElementById('jam');
-                const now = new Date();
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function updateJam() {
+        const jamElement = document.getElementById('jam');
+        const now = new Date();
 
-                const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                const tanggal = now.toLocaleDateString('id-ID', options);
-                const waktu = now.toLocaleTimeString('id-ID');
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const tanggal = now.toLocaleDateString('id-ID', options);
+        const waktu = now.toLocaleTimeString('id-ID');
 
-                jamElement.textContent = `${tanggal} - ${waktu}`;
-            }
+        jamElement.textContent = `${tanggal} - ${waktu}`;
+    }
 
-            setInterval(updateJam, 1000);
-            updateJam(); // inisialisasi awal
-        });
-    </script>
+    setInterval(updateJam, 1000);
+    updateJam(); // pertama kali
+});
+</script>
 </body>
 </html>
