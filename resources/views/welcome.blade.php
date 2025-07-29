@@ -39,8 +39,9 @@
               <label>Shift</label>
           <select name="shift" required>
             <option value="">-- Pilih Shift --</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
+            <option value="1">1 (06:30 - 14:30)</option>
+            <option value="2">2 (14:30 - 22:30)</option>
+            <option value="3">3 (22:30 - 06:30)</option>
           </select>
 
         <label>Petugas Baru</label>
@@ -53,8 +54,9 @@
       <label for="shift">Shift:</label>
       <select name="shift" id="shift" required>
         <option value="">-- Pilih Shift --</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
+        <option value="1">1 (06:30 - 14:30)</option>
+        <option value="2">2 (14:30 - 22:30)</option>
+        <option value="3">3 (22:30 - 06:30)</option>
           </select>
 
         <label>Tanggal Shift</label>
