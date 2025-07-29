@@ -5,6 +5,36 @@
     <title>Data Berita Acara Shift</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('css/table.css') }}">  
+    <style>
+        .btn-edit, .btn-print {
+            display: inline-block;
+            padding: 6px 10px;
+            margin: 2px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-print {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
 
@@ -13,7 +43,6 @@
     </div>
 
     <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
-      <div id="jam"></div>
 
     <div class="main-content">
         <h1>Tabel Berita Acara Shift SOC Telkomsat</h1>
@@ -64,11 +93,7 @@
                             <td>{!! nl2br(e($data->daily_report)) !!}</td>
                             <td class="actions">
                                 <a href="{{ route('beritaacara.edit', $data->id) }}" class="btn btn-edit">Edit</a>
-                                <form action="{{ route('beritaacara.destroy', $data->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-delete">Hapus</button>
-                                </form>
+                                <a href="{{ route('beritaacara.print', $data->id) }}" class="btn btn-print" target="_blank">Print</a>
                             </td>
                         </tr>
                     @endforeach
@@ -78,22 +103,22 @@
     </div>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    function updateJam() {
-        const jamElement = document.getElementById('jam');
-        const now = new Date();
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateJam() {
+            const jamElement = document.getElementById('jam');
+            const now = new Date();
 
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const tanggal = now.toLocaleDateString('id-ID', options);
-        const waktu = now.toLocaleTimeString('id-ID');
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const tanggal = now.toLocaleDateString('id-ID', options);
+            const waktu = now.toLocaleTimeString('id-ID');
 
-        jamElement.textContent = `${tanggal} - ${waktu}`;
-    }
+            jamElement.textContent = `${tanggal} - ${waktu}`;
+        }
 
-    setInterval(updateJam, 1000);
-    updateJam(); // pertama kali
-});
-</script>
+        setInterval(updateJam, 1000);
+        updateJam(); // pertama kali
+    });
+    </script>
 
 </body>
 </html>

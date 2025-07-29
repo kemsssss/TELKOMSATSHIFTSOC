@@ -74,18 +74,43 @@ class BeritaAcaraController extends Controller
         return Pdf::loadView('berita-acara', $data)->stream('serah-terima-shift-SOC.pdf');
     }
 
-    private function getBase64FromStorage($relativePath)
+    public function print($id)
     {
-        if (!$relativePath) return '';
+        $beritaAcara = BeritaAcara::findOrFail($id);
 
-        if (Storage::disk('public')->exists($relativePath)) {
-            $path = Storage::disk('public')->path($relativePath);
-            $mime = mime_content_type($path);
-            $base64 = base64_encode(file_get_contents($path));
-            return "data:{$mime};base64,{$base64}";
-        }
+        // Ambil data petugas berdasarkan nama (jika tidak ada relasi langsung ID -> model Petugas)
+        $petugasLama = Petugas::where('nama', $beritaAcara->lama_nama)->first();
+        $petugasBaru = Petugas::where('nama', $beritaAcara->baru_nama)->first();
 
-        return '';
+        $data = [
+            'petugas_lama'   => $petugasLama ?? (object)[
+                'nama' => $beritaAcara->lama_nama,
+                'nik' => $beritaAcara->lama_nik,
+                'ttd' => null
+            ],
+            'petugas_baru'   => $petugasBaru ?? (object)[
+                'nama' => $beritaAcara->baru_nama,
+                'nik' => $beritaAcara->baru_nik,
+                'ttd' => null
+            ],
+            'shift'          => $beritaAcara->lama_shift,
+            'tanggal_shift'  => \Carbon\Carbon::parse($beritaAcara->created_at)->format('d F Y'),
+            'tiket_nomor'    => $beritaAcara->tiket,
+            'sangfor'        => $beritaAcara->sangfor,
+            'fortijtn'       => $beritaAcara->jtn,
+            'fortiweb'       => $beritaAcara->web,
+            'checkpoint'     => $beritaAcara->checkpoint,
+            'sophos_ip'      => explode("\n", $beritaAcara->sophos_ip),
+            'sophos_url'     => explode("\n", $beritaAcara->sophos_url),
+            'vpn'            => explode("\n", $beritaAcara->vpn),
+            'edr'            => explode("\n", $beritaAcara->edr),
+            'magnus'         => explode("\n", $beritaAcara->daily_report),
+            'lama_ttd'       => $this->getBase64FromStorage($petugasLama->ttd ?? null),
+            'baru_ttd'       => $this->getBase64FromStorage($petugasBaru->ttd ?? null),
+            'logo'           => $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png'),
+        ];
+
+        return Pdf::loadView('berita-acara', $data)->stream('Serah Terima Shift SOC.pdf');
     }
 
     public function getPetugas($id)
@@ -111,45 +136,38 @@ class BeritaAcaraController extends Controller
         return view('edittable', compact('beritaAcara'));
     }
 
-public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'tiket'        => 'nullable|string',
-        'sangfor'      => 'nullable|string',
-        'jtn'          => 'nullable|string',
-        'web'          => 'nullable|string',
-        'checkpoint'   => 'nullable|string',
-        'sophos_ip'    => 'nullable|string',
-        'sophos_url'   => 'nullable|string',
-        'vpn'          => 'nullable|string',
-        'edr'          => 'nullable|string',
-        'daily_report' => 'nullable|string',
-    ]);
-
-    $beritaAcara = BeritaAcara::findOrFail($id);
-
-    $beritaAcara->update([
-        'tiket'        => $validated['tiket'] ?? '',
-        'sangfor'      => $validated['sangfor'] ?? '',
-        'jtn'          => $validated['jtn'] ?? '',
-        'web'          => $validated['web'] ?? '',
-        'checkpoint'   => $validated['checkpoint'] ?? '',
-        'sophos_ip'    => $validated['sophos_ip'] ?? '',
-        'sophos_url'   => $validated['sophos_url'] ?? '',
-        'vpn'          => $validated['vpn'] ?? '',
-        'edr'          => $validated['edr'] ?? '',
-        'daily_report' => $validated['daily_report'] ?? '',
-    ]);
-
-    return redirect()->route('table')->with('success', 'Data Berita Acara berhasil diperbarui.');
-}
-
-
-
-    public function destroy($id)
+    public function update(Request $request, $id)
     {
+        $validated = $request->validate([
+            'tiket'        => 'nullable|string',
+            'sangfor'      => 'nullable|string',
+            'jtn'          => 'nullable|string',
+            'web'          => 'nullable|string',
+            'checkpoint'   => 'nullable|string',
+            'sophos_ip'    => 'nullable|string',
+            'sophos_url'   => 'nullable|string',
+            'vpn'          => 'nullable|string',
+            'edr'          => 'nullable|string',
+            'daily_report' => 'nullable|string',
+        ]);
+
         $beritaAcara = BeritaAcara::findOrFail($id);
-        $beritaAcara->delete();
-        return redirect()->route('table')->with('success', 'Data berhasil dihapus.');
+        $beritaAcara->update($validated);
+
+        return redirect()->route('table')->with('success', 'Data Berita Acara berhasil diperbarui.');
+    }
+
+    private function getBase64FromStorage($relativePath)
+    {
+        if (!$relativePath) return '';
+
+        if (Storage::disk('public')->exists($relativePath)) {
+            $path = Storage::disk('public')->path($relativePath);
+            $mime = mime_content_type($path);
+            $base64 = base64_encode(file_get_contents($path));
+            return "data:{$mime};base64,{$base64}";
+        }
+
+        return '';
     }
 }
