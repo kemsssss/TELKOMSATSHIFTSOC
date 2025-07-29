@@ -4,37 +4,100 @@
     <meta charset="UTF-8">
     <title>Data Berita Acara Shift</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ asset('css/table.css') }}">  
-    <style>
-        .btn-edit, .btn-print {
-            display: inline-block;
-            padding: 6px 10px;
-            margin: 2px;
-            font-size: 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-        }
+    <link rel="stylesheet" href="{{ asset('css/table.css') }}">
+<style>
+  /* Font dasar */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+  }
 
-        .btn-edit {
-            background-color: #007bff;
-            color: white;
-        }
+  h2 {
+    text-align: center;
+    margin: 20px 0;
+    color: #880000;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 
-        .btn-edit:hover {
-            background-color: #0056b3;
-        }
+  /* Container tabel agar bisa discroll */
+  .table-container {
+    overflow-x: auto;
+    padding: 20px;
+  }
 
-        .btn-print {
-            background-color: #4CAF50;
-            color: white;
-        }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    color: #1a1a1a;
+  }
 
-        .btn-print:hover {
-            background-color: #45a049;
-        }
-    </style>
+  thead {
+    background-color: #d70000;
+    color: #fff;
+  }
+
+  th, td {
+    padding: 10px 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-edit {
+    background-color: #28a745;
+    color: white;
+    margin-right: 4px;
+  }
+
+  .btn-print {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* Tombol saat dihover */
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Responsive max-width untuk card/table wrapper */
+  @media (max-width: 768px) {
+    table {
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 8px;
+    }
+
+    .btn {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+  }
+</style>
+
 </head>
 <body>
 
@@ -53,11 +116,12 @@
                     <tr>
                         <th>No</th>
                         <th>Tanggal</th>
-                        <th>Shift</th>
-                        <th>Petugas Lama</th>
-                        <th>NIK Lama</th>
-                        <th>Petugas Baru</th>
-                        <th>NIK Baru</th>
+                        <th>Nama Petugas Lama</th>
+                        <th>NIK Petugas Lama</th>
+                        <th>Shift Petugas Lama</th>
+                        <th>Nama Petugas Baru</th>
+                        <th>NIK Petugas Baru</th>
+                        <th>Shift Petugas Baru</th>
                         <th>No Tiket</th>
                         <th>Sangfor</th>
                         <th>FortiJTN</th>
@@ -76,11 +140,12 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') }}</td>
-                            <td>{{ $data->lama_shift }}</td>
                             <td>{{ $data->lama_nama }}</td>
                             <td>{{ $data->lama_nik }}</td>
+                            <td>{{ $data->lama_shift }}</td>
                             <td>{{ $data->baru_nama }}</td>
                             <td>{{ $data->baru_nik }}</td>
+                            <td>{{ $data->baru_shift }}</td>
                             <td>{!! nl2br(e($data->tiket)) !!}</td>
                             <td>{!! nl2br(str_replace(',', "\n", e($data->sangfor))) !!}</td>
                             <td>{!! nl2br(str_replace(',', "\n", e($data->jtn))) !!}</td>
@@ -103,21 +168,21 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function updateJam() {
-            const jamElement = document.getElementById('jam');
-            const now = new Date();
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateJam() {
+                const jamElement = document.getElementById('jam');
+                const now = new Date();
 
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            const tanggal = now.toLocaleDateString('id-ID', options);
-            const waktu = now.toLocaleTimeString('id-ID');
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                const tanggal = now.toLocaleDateString('id-ID', options);
+                const waktu = now.toLocaleTimeString('id-ID');
 
-            jamElement.textContent = `${tanggal} - ${waktu}`;
-        }
+                jamElement.textContent = `${tanggal} - ${waktu}`;
+            }
 
-        setInterval(updateJam, 1000);
-        updateJam(); // pertama kali
-    });
+            setInterval(updateJam, 1000);
+            updateJam();
+        });
     </script>
 
 </body>

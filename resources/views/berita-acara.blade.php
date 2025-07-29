@@ -98,13 +98,14 @@
   <p><strong>Yang bertanda tangan di bawah ini:</strong></p>
   <p>Nama: {{ $petugas_lama->nama }}</p>
   <p>NIK: {{ $petugas_lama->nik }}</p>
-  <p>Shift: {{ $shift }}</p>
+  <p>Shift: {{ $lama_shift }}</p>
 
   <p><strong>Serah terima shift dengan:</strong></p>
   <p>Nama: {{ $petugas_baru->nama }}</p>
   <p>NIK: {{ $petugas_baru->nik }}</p>
-  <p>Shift: {{ $shift }}</p>
+  <p>Shift: {{ $baru_shift }}</p>
 </div>
+
 
 <div class="section">
   <p>Pada hari <strong>{{ $tanggal_shift }}</strong>, dengan ini kami melakukan pergantian shift SOC dengan detail pekerjaan sebagai berikut:</p>

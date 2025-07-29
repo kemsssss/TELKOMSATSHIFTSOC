@@ -36,13 +36,16 @@
           @endforeach
         </select>
 
-              <label>Shift</label>
-          <select name="shift" required>
-            <option value="">-- Pilih Shift --</option>
-            <option value="1">1 (06:30 - 14:30)</option>
-            <option value="2">2 (14:30 - 22:30)</option>
-            <option value="3">3 (22:30 - 06:30)</option>
-          </select>
+<label>Shift Petugas Lama</label>
+<select name="lama_shift" required>
+    <option value="">-- Pilih Shift --</option>
+    <option value="1 (06:30 - 14:30)">1 (06:30 - 14:30)</option>
+    <option value="2 (14:30 - 22:30)">2 (14:30 - 22:30)</option>
+    <option value="3 (22:30 - 06:30)">3 (22:30 - 06:30)</option>
+</select>
+
+
+
 
         <label>Petugas Baru</label>
         <select name="petugas_baru_id" required>
@@ -51,13 +54,13 @@
           @endforeach
         </select>
 
-      <label for="shift">Shift:</label>
-      <select name="shift" id="shift" required>
-        <option value="">-- Pilih Shift --</option>
-        <option value="1">1 (06:30 - 14:30)</option>
-        <option value="2">2 (14:30 - 22:30)</option>
-        <option value="3">3 (22:30 - 06:30)</option>
-          </select>
+<label>Shift Petugas Baru</label>
+<select name="baru_shift" required>
+    <option value="">-- Pilih Shift --</option>
+    <option value="1 (06:30 - 14:30)">1 (06:30 - 14:30)</option>
+    <option value="2 (14:30 - 22:30)">2 (14:30 - 22:30)</option>
+    <option value="3 (22:30 - 06:30)">3 (22:30 - 06:30)</option>
+</select>
 
         <label>Tanggal Shift</label>
         <input type="date" name="tanggal_shift" value="{{ date('Y-m-d') }}">
@@ -90,27 +93,27 @@
 
       <div id="sophos-ip-group">
         <label>Sophos IP:</label>
-        <input type="text" name="sophos_ip[]" placeholder="Mauskan IP">
+        <input type="text" name="sophos_ip[]" placeholder="Mausukan IP (Jika Ingin Menambahkan Klik enter)">
       </div>
 
       <div id="sophos-url-group">
         <label>Sophos URL:</label>
-        <input type="text" name="sophos_url[]" placeholder="Masukkan URL">
+        <input type="text" name="sophos_url[]" placeholder="Masukkan URL (Jika Ingin Menambahkan Klik enter)">
       </div>
 
       <div id="vpn-group">
         <label>VPN:</label>
-        <input type="text" name="vpn[]" placeholder="Masukkan VPN">
+        <input type="text" name="vpn[]" placeholder="Masukkan VPN (Jika Ingin Menambahkan Klik enter)">
       </div>
 
       <div id="edr-group">
         <label>EDR:</label>
-        <input type="text" name="edr[]" placeholder="Masukkan EDR">
+        <input type="text" name="edr[]" placeholder="Masukkan EDR (Jika Ingin Menambahkan Klik enter)">
       </div>
 
       <div id="magnus-group">
         <label>Daily Report Magnus:</label>
-        <input type="text" name="magnus[]" placeholder="Masukkan laporan Magnus">
+        <input type="text" name="magnus[]" placeholder="Masukkan laporan Magnus (Jika Ingin Menambahkan Klik enter)">
       </div>
     </div>
     </ul>

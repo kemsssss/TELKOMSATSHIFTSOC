@@ -19,10 +19,11 @@ class BeritaAcaraController extends Controller
     public function cetakPDF(Request $request)
     {
         $validated = $request->validate([
-            'petugas_lama_id' => 'required|exists:petugas,id',
-            'petugas_baru_id' => 'required|exists:petugas,id',
-            'shift' => 'required',
-            'tanggal_shift' => 'required|date',
+    'petugas_lama_id' => 'required|exists:petugas,id',
+    'petugas_baru_id' => 'required|exists:petugas,id',
+    'lama_shift'      => 'required|string',
+    'baru_shift'      => 'required|string',
+    'tanggal_shift'   => 'required|date',
         ]);
 
         $petugasLama = Petugas::findOrFail($validated['petugas_lama_id']);
@@ -35,10 +36,10 @@ class BeritaAcaraController extends Controller
         BeritaAcara::create([
             'lama_nama'    => $petugasLama->nama,
             'lama_nik'     => $petugasLama->nik,
-            'lama_shift'   => $request->input('shift'),
-            'baru_nama'    => $petugasBaru->nama,
-            'baru_nik'     => $petugasBaru->nik,
-            'baru_shift'   => $request->input('shift'),
+    'lama_shift'   => $validated['lama_shift'],
+    'baru_nama'    => $petugasBaru->nama,
+    'baru_nik'     => $petugasBaru->nik,
+    'baru_shift'   => $validated['baru_shift'],
             'tiket'        => $request->input('tiket_nomor'),
             'sangfor'      => $request->input('soar_sangfor'),
             'jtn'          => $request->input('soar_fortijtn'),
@@ -54,7 +55,8 @@ class BeritaAcaraController extends Controller
         $data = [
             'petugas_lama'   => $petugasLama,
             'petugas_baru'   => $petugasBaru,
-            'shift'          => $request->input('shift'),
+    'lama_shift'     => $validated['lama_shift'],
+    'baru_shift'     => $validated['baru_shift'],
             'tanggal_shift'  => $request->input('tanggal_shift'),
             'tiket_nomor'    => $request->input('tiket_nomor'),
             'sangfor'        => $request->input('soar_sangfor'),
@@ -93,7 +95,9 @@ class BeritaAcaraController extends Controller
                 'nik' => $beritaAcara->baru_nik,
                 'ttd' => null
             ],
-            'shift'          => $beritaAcara->lama_shift,
+            'lama_shift' => $beritaAcara->lama_shift,
+'baru_shift' => $beritaAcara->baru_shift,
+
             'tanggal_shift'  => \Carbon\Carbon::parse($beritaAcara->created_at)->format('d F Y'),
             'tiket_nomor'    => $beritaAcara->tiket,
             'sangfor'        => $beritaAcara->sangfor,
