@@ -16,73 +16,78 @@ class BeritaAcaraController extends Controller
         return view('welcome', compact('petugas'));
     }
 
-    public function cetakPDF(Request $request)
-    {
-        $validated = $request->validate([
-    'petugas_lama_id' => 'required|exists:petugas,id',
-    'petugas_baru_id' => 'required|exists:petugas,id',
-    'lama_shift'      => 'required|string',
-    'baru_shift'      => 'required|string',
-    'tanggal_shift'   => 'required|date',
-        ]);
+public function cetakPDF(Request $request)
+{
+    $validated = $request->validate([
+        'petugas_lama'    => 'required|array|min:1',
+        'petugas_lama.*'  => 'exists:petugas,id',
+        'petugas_baru'    => 'required|array|min:1',
+        'petugas_baru.*'  => 'exists:petugas,id',
+        'lama_shift'      => 'required|string',
+        'baru_shift'      => 'required|string',
+        'tanggal_shift'   => 'required|date',
+    ]);
 
-        $petugasLama = Petugas::findOrFail($validated['petugas_lama_id']);
-        $petugasBaru = Petugas::findOrFail($validated['petugas_baru_id']);
+    $petugasLama = Petugas::whereIn('id', $validated['petugas_lama'])->get();
+    $petugasBaru = Petugas::whereIn('id', $validated['petugas_baru'])->get();
 
-        $lama_ttd = $this->getBase64FromStorage($petugasLama->ttd);
-        $baru_ttd = $this->getBase64FromStorage($petugasBaru->ttd);
-        $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
+    $lama_ttd = $this->getBase64FromStorage($petugasLama[0]->ttd ?? null);
+    $baru_ttd = $this->getBase64FromStorage($petugasBaru[0]->ttd ?? null);
+    $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
 
-        BeritaAcara::create([
-            'lama_nama'    => $petugasLama->nama,
-            'lama_nik'     => $petugasLama->nik,
-    'lama_shift'   => $validated['lama_shift'],
-    'baru_nama'    => $petugasBaru->nama,
-    'baru_nik'     => $petugasBaru->nik,
-    'baru_shift'   => $validated['baru_shift'],
-            'tiket'        => $request->input('tiket_nomor'),
-            'sangfor'      => $request->input('soar_sangfor'),
-            'jtn'          => $request->input('soar_fortijtn'),
-            'web'          => $request->input('soar_fortiweb'),
-            'checkpoint'   => $request->input('soar_checkpoint'),
-            'sophos_ip'    => implode("\n", $request->input('sophos_ip', [])),
-            'sophos_url'   => implode("\n", $request->input('sophos_url', [])),
-            'vpn'          => implode("\n", $request->input('vpn', [])),
-            'edr'          => implode("\n", $request->input('edr', [])),
-            'daily_report' => implode("\n", $request->input('magnus', [])),
-        ]);
+    // Simpan ke DB (ambil petugas pertama sebagai perwakilan untuk disimpan)
+    BeritaAcara::create([
+        'lama_nama'    => $petugasLama[0]->nama ?? '',
+        'lama_nik'     => $petugasLama[0]->nik ?? '',
+        'lama_shift'   => $validated['lama_shift'],
+        'baru_nama'    => $petugasBaru[0]->nama ?? '',
+        'baru_nik'     => $petugasBaru[0]->nik ?? '',
+        'baru_shift'   => $validated['baru_shift'],
+        'tiket'        => $request->input('tiket_nomor'),
+        'sangfor'      => $request->input('soar_sangfor'),
+        'jtn'          => $request->input('soar_fortijtn'),
+        'web'          => $request->input('soar_fortiweb'),
+        'checkpoint'   => $request->input('soar_checkpoint'),
+        'sophos_ip'    => implode("\n", $request->input('sophos_ip', [])),
+        'sophos_url'   => implode("\n", $request->input('sophos_url', [])),
+        'vpn'          => implode("\n", $request->input('vpn', [])),
+        'edr'          => implode("\n", $request->input('edr', [])),
+        'daily_report' => implode("\n", $request->input('magnus', [])),
+    ]);
 
-        $data = [
-            'petugas_lama'   => $petugasLama,
-            'petugas_baru'   => $petugasBaru,
-    'lama_shift'     => $validated['lama_shift'],
-    'baru_shift'     => $validated['baru_shift'],
-            'tanggal_shift'  => $request->input('tanggal_shift'),
-            'tiket_nomor'    => $request->input('tiket_nomor'),
-            'sangfor'        => $request->input('soar_sangfor'),
-            'fortijtn'       => $request->input('soar_fortijtn'),
-            'fortiweb'       => $request->input('soar_fortiweb'),
-            'checkpoint'     => $request->input('soar_checkpoint'),
-            'sophos_ip'      => $request->input('sophos_ip', []),
-            'sophos_url'     => $request->input('sophos_url', []),
-            'vpn'            => $request->input('vpn', []),
-            'edr'            => $request->input('edr', []),
-            'magnus'         => $request->input('magnus', []),
-            'lama_ttd'       => $lama_ttd,
-            'baru_ttd'       => $baru_ttd,
-            'logo'           => $logo,
-        ];
+    $data = [
+        'petugas_lama'   => $petugasLama,
+        'petugas_baru'   => $petugasBaru,
+        'lama_shift'     => $validated['lama_shift'],
+        'baru_shift'     => $validated['baru_shift'],
+        'tanggal_shift'  => $request->input('tanggal_shift'),
+        'tiket_nomor'    => $request->input('tiket_nomor'),
+        'sangfor'        => $request->input('soar_sangfor'),
+        'fortijtn'       => $request->input('soar_fortijtn'),
+        'fortiweb'       => $request->input('soar_fortiweb'),
+        'checkpoint'     => $request->input('soar_checkpoint'),
+        'sophos_ip'      => $request->input('sophos_ip', []),
+        'sophos_url'     => $request->input('sophos_url', []),
+        'vpn'            => $request->input('vpn', []),
+        'edr'            => $request->input('edr', []),
+        'magnus'         => $request->input('magnus', []),
+        'lama_ttd'       => $lama_ttd,
+        'baru_ttd'       => $baru_ttd,
+        'logo'           => $logo,
+    ];
 
-        return Pdf::loadView('berita-acara', $data)->stream('serah-terima-shift-SOC.pdf');
-    }
+    return Pdf::loadView('berita-acara', $data)->stream('serah-terima-shift-SOC.pdf');
+}
+
 
     public function print($id)
     {
         $beritaAcara = BeritaAcara::findOrFail($id);
 
         // Ambil data petugas berdasarkan nama (jika tidak ada relasi langsung ID -> model Petugas)
-        $petugasLama = Petugas::where('nama', $beritaAcara->lama_nama)->first();
-        $petugasBaru = Petugas::where('nama', $beritaAcara->baru_nama)->first();
+$petugas_lama = Petugas::findMany($request->petugas_lama);
+$petugas_baru = Petugas::findMany($request->petugas_baru);
+ 
 
         $data = [
             'petugas_lama'   => $petugasLama ?? (object)[

@@ -93,18 +93,24 @@
 @endif
 
 <h2>BERITA ACARA SERAH TERIMA SHIFT SOC <span style="color: red;">TELKOMSAT</span></h2>
-
 <div class="section">
-  <p><strong>Yang bertanda tangan di bawah ini:</strong></p>
-  <p>Nama: {{ $petugas_lama->nama }}</p>
-  <p>NIK: {{ $petugas_lama->nik }}</p>
-  <p>Shift: {{ $lama_shift }}</p>
 
-  <p><strong>Serah terima shift dengan:</strong></p>
-  <p>Nama: {{ $petugas_baru->nama }}</p>
-  <p>NIK: {{ $petugas_baru->nik }}</p>
-  <p>Shift: {{ $baru_shift }}</p>
-</div>
+
+<p><strong>Yang bertanda tangan di bawah ini:</strong></p>
+@foreach ($petugas_lama as $petugas)
+  <p>Nama: {{ $petugas->nama }}</p>
+  <p>NIK: {{ $petugas->nik }}</p>
+@endforeach
+<p>Shift Lama: {{ $lama_shift }}</p>
+
+<p><strong>Serah terima shift dengan:</strong></p>
+@foreach ($petugas_baru as $petugas)
+  <p>Nama: {{ $petugas->nama }}</p>
+  <p>NIK: {{ $petugas->nik }}</p>
+@endforeach
+
+<p>Shift Baru: {{ $baru_shift }}</p>
+
 
 
 <div class="section">
@@ -144,40 +150,59 @@
 </div>
 
 @php
-  $ttdLamaPath = public_path('storage/' . $petugas_lama->ttd);
-  $ttdBaruPath = public_path('storage/' . $petugas_baru->ttd);
-  $ttdLamaBase64 = file_exists($ttdLamaPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($ttdLamaPath)) : null;
-  $ttdBaruBase64 = file_exists($ttdBaruPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($ttdBaruPath)) : null;
+    $ttdLamaBase64 = [];
+
+    foreach ($petugas_lama->take(1) as $p) {
+        $path = public_path('storage/' . $p->ttd);
+        $ttdLamaBase64[] = [
+            'nama' => $p->nama,
+            'nik' => $p->nik,
+            'img' => file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : null
+        ];
+    }
+
+    $ttdBaruBase64 = [];
+
+    foreach ($petugas_baru->take(1) as $p) {
+        $path = public_path('storage/' . $p->ttd);
+        $ttdBaruBase64[] = [
+            'nama' => $p->nama,
+            'nik' => $p->nik,
+            'img' => file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : null
+        ];
+    }
 @endphp
 
-<table>
-  <tr>
-    <td>
-      Petugas Lama<br><br>
-      @if ($ttdLamaBase64)
-        <img src="{{ $ttdLamaBase64 }}" height="150" alt="TTD Petugas Lama"><br>
-      @else
-        <p class="text-red">TTD belum tersedia</p>
-      @endif
-      <div class="ttd-label">
-        <strong>{{ $petugas_lama->nama }}</strong><br>
-        NIK: {{ $petugas_lama->nik }}
-      </div>
-    </td>
-    <td>
-      Petugas Baru<br><br>
-      @if ($ttdBaruBase64)
-        <img src="{{ $ttdBaruBase64 }}" height="150" alt="TTD Petugas Baru"><br>
-      @else
-        <p class="text-red">TTD belum tersedia</p>
-      @endif
-      <div class="ttd-label">
-        <strong>{{ $petugas_baru->nama }}</strong><br>
-        NIK: {{ $petugas_baru->nik }}
-      </div>
-    </td>
-  </tr>
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+    <tr>
+        <th>Petugas Lama</th>
+        <th>Petugas Baru</th>
+    </tr>
+    <tr>
+        <td valign="top">
+            @foreach ($ttdLamaBase64 as $ttd)
+                <p>Nama: {{ $ttd['nama'] }}<br>NIK: {{ $ttd['nik'] }}</p>
+                @if ($ttd['img'])
+                    <img src="{{ $ttd['img'] }}" height="100" alt="TTD Petugas Lama"><br>
+                @else
+                    <p class="text-red">TTD tidak tersedia</p>
+                @endif
+            @endforeach
+        </td>
+        <td valign="top">
+            @foreach ($ttdBaruBase64 as $ttd)
+                <p>Nama: {{ $ttd['nama'] }}<br>NIK: {{ $ttd['nik'] }}</p>
+                @if ($ttd['img'])
+                    <img src="{{ $ttd['img'] }}" height="100" alt="TTD Petugas Baru"><br>
+                @else
+                    <p class="text-red">TTD tidak tersedia</p>
+                @endif
+            @endforeach
+        </td>
+    </tr>
 </table>
+
+
 
 </body>
 </html>

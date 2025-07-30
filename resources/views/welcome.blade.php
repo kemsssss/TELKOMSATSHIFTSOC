@@ -15,44 +15,62 @@
   </div>
       <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
       <div id="jam"></div>
-
+      
 
       <div class="container">
         <img src="https://uploads.onecompiler.io/432w6j563/43ryj9p7w/Logo-Telkomsat.png" alt="Logo Telkomsat" class="mx-auto h-14 mb-6">
-
-
+        
+        
         <h1>BERITA ACARA</h1>
         <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
-
-      <form action="{{ route('generate.pdf') }}" method="POST">
-        @csrf
-
-
-
-        <label>Petugas Lama</label>
-        <select name="petugas_lama_id" required>
-          @foreach ($petugas as $p)
-            <option value="{{ $p->id }}">{{ $p->nama }}</option>
-          @endforeach
-        </select>
-
-<label>Shift Petugas Lama</label>
-<select name="lama_shift" required>
-    <option value="">-- Pilih Shift --</option>
-    <option value="1 (06:30 - 14:30)">1 (06:30 - 14:30)</option>
-    <option value="2 (14:30 - 22:30)">2 (14:30 - 22:30)</option>
-    <option value="3 (22:30 - 06:30)">3 (22:30 - 06:30)</option>
-</select>
-
-
-
-
-        <label>Petugas Baru</label>
-        <select name="petugas_baru_id" required>
-          @foreach ($petugas as $p)
-            <option value="{{ $p->id }}">{{ $p->nama }}</option>
-          @endforeach
-        </select>
+        
+        <form action="{{ route('generate.pdf') }}" method="POST">
+          @csrf
+          
+          
+          
+          <!-- Petugas Lama -->
+          <div class="mb-4">
+            <label class="block text-sm font-bold mb-1">Petugas Lama</label>
+            <div id="petugasLamaWrapper">
+              <div class="flex items-center mb-2">
+                <select name="petugas_lama[]" class="form-select">
+                  @foreach($petugas as $p)
+                    <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+                  @endforeach
+                </select>
+                <button type="button" class="ml-2 text-red-500" onclick="hapusInput(this)">Hapus</button>
+              </div>
+            </div>
+            <button type="button" class="mt-2 text-blue-500" onclick="tambahInput('petugasLamaWrapper', 'petugas_lama[]')">+ Tambah Petugas Lama</button>
+          </div>
+          
+          <label>Shift Petugas Lama</label>
+          <select name="lama_shift" required>
+            <option value="">-- Pilih Shift --</option>
+            <option value="1 (06:30 - 14:30)">1 (06:30 - 14:30)</option>
+            <option value="2 (14:30 - 22:30)">2 (14:30 - 22:30)</option>
+            <option value="3 (22:30 - 06:30)">3 (22:30 - 06:30)</option>
+          </select>
+          
+          
+          
+          
+          <!-- Petugas Baru -->
+          <div class="mb-4">
+            <label class="block text-sm font-bold mb-1">Petugas Baru</label>
+            <div id="petugasBaruWrapper">
+              <div class="flex items-center mb-2">
+                <select name="petugas_baru[]" class="form-select">
+                  @foreach($petugas as $p)
+                    <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+                  @endforeach
+                </select>
+                <button type="button" class="ml-2 text-red-500" onclick="hapusInput(this)">Hapus</button>
+              </div>
+            </div>
+            <button type="button" class="mt-2 text-blue-500" onclick="tambahInput('petugasBaruWrapper', 'petugas_baru[]')">+ Tambah Petugas Baru</button>
+          </div>
 
 <label>Shift Petugas Baru</label>
 <select name="baru_shift" required>
@@ -272,6 +290,28 @@ document.addEventListener('DOMContentLoaded', function () {
     updateJam(); // pertama kali
 });
 </script>
+
+<script>
+function tambahInput(wrapperId, name) {
+  const wrapper = document.getElementById(wrapperId);
+  const div = document.createElement("div");
+  div.classList.add("flex", "items-center", "mb-2");
+  div.innerHTML = `
+    <select name="${name}" class="form-select">
+      @foreach($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+      @endforeach
+    </select>
+    <button type="button" class="ml-2 text-red-500" onclick="hapusInput(this)">Hapus</button>
+  `;
+  wrapper.appendChild(div);
+}
+
+function hapusInput(button) {
+  button.parentElement.remove();
+}
+</script>
+
 
 
 
