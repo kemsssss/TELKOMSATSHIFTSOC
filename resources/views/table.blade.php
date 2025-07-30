@@ -5,99 +5,6 @@
     <title>Data Berita Acara Shift</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('css/table.css') }}">
-<style>
-  /* Font dasar */
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding: 0;
-  }
-
-  h2 {
-    text-align: center;
-    margin: 20px 0;
-    color: #880000;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  /* Container tabel agar bisa discroll */
-  .table-container {
-    overflow-x: auto;
-    padding: 20px;
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    background-color: #ffffff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    font-size: 14px;
-    color: #1a1a1a;
-  }
-
-  thead {
-    background-color: #d70000;
-    color: #fff;
-  }
-
-  th, td {
-    padding: 10px 12px;
-    text-align: center;
-    border: 1px solid #ddd;
-    vertical-align: middle;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-
-  .btn {
-    padding: 6px 12px;
-    font-size: 13px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .btn-edit {
-    background-color: #28a745;
-    color: white;
-    margin-right: 4px;
-  }
-
-  .btn-print {
-    background-color: #007bff;
-    color: white;
-  }
-
-  /* Tombol saat dihover */
-  .btn:hover {
-    opacity: 0.9;
-  }
-
-  /* Responsive max-width untuk card/table wrapper */
-  @media (max-width: 768px) {
-    table {
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 8px;
-    }
-
-    .btn {
-      font-size: 12px;
-      padding: 4px 8px;
-    }
-  }
-</style>
-
 </head>
 <body>
 
@@ -140,12 +47,42 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') }}</td>
-                            <td>{{ $data->lama_nama }}</td>
-                            <td>{{ $data->lama_nik }}</td>
-                            <td>{{ $data->lama_shift }}</td>
-                            <td>{{ $data->baru_nama }}</td>
-                            <td>{{ $data->baru_nik }}</td>
-                            <td>{{ $data->baru_shift }}</td>
+
+                            {{-- Petugas Lama --}}
+                            <td>
+                                @foreach ($data->petugasLama as $petugas)
+                                    {{ $petugas->nama }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($data->petugasLama as $petugas)
+                                    {{ $petugas->nik }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($data->petugasLama as $petugas)
+                                    {{ $data->lama_shift }}<br>
+                                @endforeach
+                            </td>
+
+                            {{-- Petugas Baru --}}
+                            <td>
+                                @foreach ($data->petugasBaru as $petugas)
+                                    {{ $petugas->nama }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($data->petugasBaru as $petugas)
+                                    {{ $petugas->nik }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($data->petugasBaru as $petugas)
+                                    {{ $data->baru_shift }}<br>
+                                @endforeach
+                            </td>
+
+                            {{-- Data lainnya --}}
                             <td>{!! nl2br(e($data->tiket)) !!}</td>
                             <td>{!! nl2br(str_replace(',', "\n", e($data->sangfor))) !!}</td>
                             <td>{!! nl2br(str_replace(',', "\n", e($data->jtn))) !!}</td>

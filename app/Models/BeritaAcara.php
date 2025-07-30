@@ -38,4 +38,14 @@ class BeritaAcara extends Model
         'edr' => 'array',
         'daily_report' => 'array',
     ];
+
+    public function petugasLama()
+{
+    return $this->belongsToMany(Petugas::class, 'berita_acara_petugas_lama')->withPivot('shift');
+}
+
+public function petugasBaru()
+{
+    return $this->belongsToMany(Petugas::class, 'berita_acara_petugas_baru')->withPivot('shift');
+}
 }

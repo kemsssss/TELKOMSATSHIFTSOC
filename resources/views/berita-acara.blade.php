@@ -152,7 +152,7 @@
 @php
     $ttdLamaBase64 = [];
 
-    foreach ($petugas_lama->take(1) as $p) {
+    foreach ($petugas_lama as $p) {
         $path = public_path('storage/' . $p->ttd);
         $ttdLamaBase64[] = [
             'nama' => $p->nama,
@@ -163,7 +163,7 @@
 
     $ttdBaruBase64 = [];
 
-    foreach ($petugas_baru->take(1) as $p) {
+    foreach ($petugas_baru as $p) {
         $path = public_path('storage/' . $p->ttd);
         $ttdBaruBase64[] = [
             'nama' => $p->nama,

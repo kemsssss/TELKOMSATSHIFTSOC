@@ -36,24 +36,31 @@ public function cetakPDF(Request $request)
     $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
 
     // Simpan ke DB (ambil petugas pertama sebagai perwakilan untuk disimpan)
-    BeritaAcara::create([
-        'lama_nama'    => $petugasLama[0]->nama ?? '',
-        'lama_nik'     => $petugasLama[0]->nik ?? '',
-        'lama_shift'   => $validated['lama_shift'],
-        'baru_nama'    => $petugasBaru[0]->nama ?? '',
-        'baru_nik'     => $petugasBaru[0]->nik ?? '',
-        'baru_shift'   => $validated['baru_shift'],
-        'tiket'        => $request->input('tiket_nomor'),
-        'sangfor'      => $request->input('soar_sangfor'),
-        'jtn'          => $request->input('soar_fortijtn'),
-        'web'          => $request->input('soar_fortiweb'),
-        'checkpoint'   => $request->input('soar_checkpoint'),
-        'sophos_ip'    => implode("\n", $request->input('sophos_ip', [])),
-        'sophos_url'   => implode("\n", $request->input('sophos_url', [])),
-        'vpn'          => implode("\n", $request->input('vpn', [])),
-        'edr'          => implode("\n", $request->input('edr', [])),
-        'daily_report' => implode("\n", $request->input('magnus', [])),
+    $beritaAcara = BeritaAcara::create([
+        'lama_shift'     => $validated['lama_shift'],
+        'baru_shift'     => $validated['baru_shift'],
+        'tanggal_shift'  => $validated['tanggal_shift'],
+        'tiket'          => $request->input('tiket_nomor'),
+        'sangfor'        => $request->input('soar_sangfor'),
+        'jtn'            => $request->input('soar_fortijtn'),
+        'web'            => $request->input('soar_fortiweb'),
+        'checkpoint'     => $request->input('soar_checkpoint'),
+        'sophos_ip'      => implode("\n", $request->input('sophos_ip', [])),
+        'sophos_url'     => implode("\n", $request->input('sophos_url', [])),
+        'vpn'            => implode("\n", $request->input('vpn', [])),
+        'edr'            => implode("\n", $request->input('edr', [])),
+        'daily_report'   => implode("\n", $request->input('magnus', [])),
     ]);
+
+    // Simpan relasi ke pivot
+    $beritaAcara->petugasLama()->attach($validated['petugas_lama']);
+    $beritaAcara->petugasBaru()->attach($validated['petugas_baru']);
+
+    // Ambil data petugas untuk PDF
+    $petugasLama = Petugas::whereIn('id', $validated['petugas_lama'])->get();
+    $petugasBaru = Petugas::whereIn('id', $validated['petugas_baru'])->get();
+
+    $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
 
     $data = [
         'petugas_lama'   => $petugasLama,
@@ -82,42 +89,20 @@ public function cetakPDF(Request $request)
 
     public function print($id)
     {
-        $beritaAcara = BeritaAcara::findOrFail($id);
+        $beritaAcara = BeritaAcara::with(['petugasLama', 'petugasBaru'])->findOrFail($id);
 
         // Ambil data petugas berdasarkan nama (jika tidak ada relasi langsung ID -> model Petugas)
-$petugas_lama = Petugas::findMany($request->petugas_lama);
-$petugas_baru = Petugas::findMany($request->petugas_baru);
+$petugas_lama = $beritaAcara->petugasLama;
+$petugas_baru = $beritaAcara->petugasBaru;
  
 
-        $data = [
-            'petugas_lama'   => $petugasLama ?? (object)[
-                'nama' => $beritaAcara->lama_nama,
-                'nik' => $beritaAcara->lama_nik,
-                'ttd' => null
-            ],
-            'petugas_baru'   => $petugasBaru ?? (object)[
-                'nama' => $beritaAcara->baru_nama,
-                'nik' => $beritaAcara->baru_nik,
-                'ttd' => null
-            ],
-            'lama_shift' => $beritaAcara->lama_shift,
-'baru_shift' => $beritaAcara->baru_shift,
-
-            'tanggal_shift'  => \Carbon\Carbon::parse($beritaAcara->created_at)->format('d F Y'),
-            'tiket_nomor'    => $beritaAcara->tiket,
-            'sangfor'        => $beritaAcara->sangfor,
-            'fortijtn'       => $beritaAcara->jtn,
-            'fortiweb'       => $beritaAcara->web,
-            'checkpoint'     => $beritaAcara->checkpoint,
-            'sophos_ip'      => explode("\n", $beritaAcara->sophos_ip),
-            'sophos_url'     => explode("\n", $beritaAcara->sophos_url),
-            'vpn'            => explode("\n", $beritaAcara->vpn),
-            'edr'            => explode("\n", $beritaAcara->edr),
-            'magnus'         => explode("\n", $beritaAcara->daily_report),
-            'lama_ttd'       => $this->getBase64FromStorage($petugasLama->ttd ?? null),
-            'baru_ttd'       => $this->getBase64FromStorage($petugasBaru->ttd ?? null),
-            'logo'           => $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png'),
-        ];
+$data = [
+    'beritaAcara'  => $beritaAcara,
+    'petugas_lama' => $petugas_lama,
+    'petugas_baru' => $petugas_baru,
+    'lama_ttd'     => $this->getBase64FromStorage($petugas_lama[0]->ttd ?? null),
+    'baru_ttd'     => $this->getBase64FromStorage($petugas_baru[0]->ttd ?? null),
+];
 
         return Pdf::loadView('berita-acara', $data)->stream('Serah Terima Shift SOC.pdf');
     }
@@ -135,7 +120,7 @@ $petugas_baru = Petugas::findMany($request->petugas_baru);
 
     public function index()
     {
-        $beritaAcaras = BeritaAcara::all();
+        $beritaAcaras = BeritaAcara::with(['petugasLama', 'petugasBaru'])->get();
         return view('table', compact('beritaAcaras'));
     }
 

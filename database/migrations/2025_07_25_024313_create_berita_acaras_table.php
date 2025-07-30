@@ -13,18 +13,8 @@ return new class extends Migration
     {
         Schema::create('berita_acaras', function (Blueprint $table) {
             $table->id();
-
-            // Petugas Lama
-            $table->string('lama_nama');
-            $table->string('lama_nik');
             $table->string('lama_shift');
-
-            // Petugas Baru
-            $table->string('baru_nama');
-            $table->string('baru_nik');
             $table->string('baru_shift');
-
-            // Detail Pekerjaan
             $table->string('tiket')->nullable();
             $table->string('sangfor')->nullable();
             $table->string('jtn')->nullable();
@@ -35,7 +25,6 @@ return new class extends Migration
             $table->string('vpn')->nullable();
             $table->string('edr')->nullable();
             $table->string('daily_report')->nullable();
-
             $table->timestamps();
         });
     }
