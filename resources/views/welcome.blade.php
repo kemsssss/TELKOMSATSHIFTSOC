@@ -23,7 +23,7 @@
         
         <h1>BERITA ACARA</h1>
         <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
-        
+        <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
         <form action="{{ route('generate.pdf') }}" method="POST">
           @csrf
           
