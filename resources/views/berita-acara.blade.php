@@ -11,9 +11,21 @@
 
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      font-size: 13px;
+      font-size: 12px;
       color: #000;
+      margin: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 14pt;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    p {
+      text-align: justify;
+      margin-bottom: 10px;
     }
 
     .logo {
@@ -23,13 +35,6 @@
 
     .logo img {
       height: 60px;
-    }
-
-    h2 {
-      text-align: center;
-      font-size: 16px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
     }
 
     .section {
@@ -42,37 +47,29 @@
       padding-left: 10px;
     }
 
-    .ttd-area {
+    table.ttd-table {
+      width: 100%;
       margin-top: 40px;
-      display: flex;
-      justify-content: space-between;
       text-align: center;
       page-break-inside: avoid;
     }
 
-    .ttd-area div {
-      width: 45%;
+    table.ttd-table td {
+      width: 50%;
+      vertical-align: top;
+    }
+
+    .ttd-img {
+      height: 100px;
+      margin-bottom: 20px;
     }
 
     .ttd-label {
-      margin-top: 30px;
       text-decoration: underline;
-      font-weight: bold;
-    }
-
-    table {
-      width: 100%;
-      text-align: center;
-      margin-top: 30px;
-      page-break-inside: avoid;
+      font-weight: normal;
     }
 
     @media print {
-      body {
-        margin: 10mm;
-        font-size: 12px;
-      }
-
       .no-print {
         display: none;
       }
@@ -82,7 +79,7 @@
 <body>
 
 @php
-  $logoPath = public_path('storage/logotelkomsat/Logo-Telkomsat.png'); // Ganti sesuai nama file logo Anda
+  $logoPath = public_path('storage/logotelkomsat/Logo-Telkomsat.png');
   $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : null;
 @endphp
 
@@ -92,26 +89,23 @@
   </div>
 @endif
 
-<h2>BERITA ACARA SERAH TERIMA SHIFT SOC <span style="color: red;">TELKOMSAT</span></h2>
+<h2>BERITA ACARA SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
+
 <div class="section">
+  <p><strong>Yang bertanda tangan di bawah ini:</strong></p>
+  @foreach ($petugas_lama as $petugas)
+    <p>Nama: {{ $petugas->nama }}</p>
+    <p>NIK: {{ $petugas->nik }}</p>
+  @endforeach
+  <p>Shift Lama: {{ $lama_shift }}</p>
 
-
-<p><strong>Yang bertanda tangan di bawah ini:</strong></p>
-@foreach ($petugas_lama as $petugas)
-  <p>Nama: {{ $petugas->nama }}</p>
-  <p>NIK: {{ $petugas->nik }}</p>
-@endforeach
-<p>Shift Lama: {{ $lama_shift }}</p>
-
-<p><strong>Serah terima shift dengan:</strong></p>
-@foreach ($petugas_baru as $petugas)
-  <p>Nama: {{ $petugas->nama }}</p>
-  <p>NIK: {{ $petugas->nik }}</p>
-@endforeach
-
-<p>Shift Baru: {{ $baru_shift }}</p>
-
-
+  <p><strong>Serah terima shift dengan:</strong></p>
+  @foreach ($petugas_baru as $petugas)
+    <p>Nama: {{ $petugas->nama }}</p>
+    <p>NIK: {{ $petugas->nik }}</p>
+  @endforeach
+  <p>Shift Baru: {{ $baru_shift }}</p>
+</div>
 
 <div class="section">
   <p>Pada hari <strong>{{ $tanggal_shift }}</strong>, dengan ini kami melakukan pergantian shift SOC dengan detail pekerjaan sebagai berikut:</p>
@@ -149,60 +143,37 @@
   <p>Sekian telah kami laksanakan pekerjaan tersebut dengan baik. Demikian berita acara ini dibuat dengan sebaik-baiknya.</p>
 </div>
 
-@php
-    $ttdLamaBase64 = [];
-
-    foreach ($petugas_lama as $p) {
-        $path = public_path('storage/' . $p->ttd);
-        $ttdLamaBase64[] = [
-            'nama' => $p->nama,
-            'nik' => $p->nik,
-            'img' => file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : null
-        ];
-    }
-
-    $ttdBaruBase64 = [];
-
-    foreach ($petugas_baru as $p) {
-        $path = public_path('storage/' . $p->ttd);
-        $ttdBaruBase64[] = [
-            'nama' => $p->nama,
-            'nik' => $p->nik,
-            'img' => file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : null
-        ];
-    }
-@endphp
-
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
-    <tr>
-        <th>Petugas Lama</th>
-        <th>Petugas Baru</th>
-    </tr>
-    <tr>
-        <td valign="top">
-            @foreach ($ttdLamaBase64 as $ttd)
-                <p>Nama: {{ $ttd['nama'] }}<br>NIK: {{ $ttd['nik'] }}</p>
-                @if ($ttd['img'])
-                    <img src="{{ $ttd['img'] }}" height="100" alt="TTD Petugas Lama"><br>
-                @else
-                    <p class="text-red">TTD tidak tersedia</p>
-                @endif
-            @endforeach
-        </td>
-        <td valign="top">
-            @foreach ($ttdBaruBase64 as $ttd)
-                <p>Nama: {{ $ttd['nama'] }}<br>NIK: {{ $ttd['nik'] }}</p>
-                @if ($ttd['img'])
-                    <img src="{{ $ttd['img'] }}" height="100" alt="TTD Petugas Baru"><br>
-                @else
-                    <p class="text-red">TTD tidak tersedia</p>
-                @endif
-            @endforeach
-        </td>
-    </tr>
+{{-- TTD Table Layout --}}
+<table class="ttd-table">
+  <tr>
+    <td>Petugas Lama</td>
+    <td>Petugas Baru</td>
+  </tr>
+  <tr>
+    <td>
+      @if ($lama_ttd)
+        <img src="{{ $lama_ttd }}" class="ttd-img" alt="TTD Petugas Lama"><br>
+      @else
+        <i>TTD tidak tersedia</i><br>
+      @endif
+    </td>
+    <td>
+      @if ($baru_ttd)
+        <img src="{{ $baru_ttd }}" class="ttd-img" alt="TTD Petugas Baru"><br>
+      @else
+        <i>TTD tidak tersedia</i><br>
+      @endif
+    </td>
+  </tr>
+  <tr>
+    <td class="ttd-label">
+      {{ $lama_nama ?? '-' }}<br>NIK: {{ $lama_nik ?? '-' }}
+    </td>
+    <td class="ttd-label">
+      {{ $baru_nama ?? '-' }}<br>NIK: {{ $baru_nik ?? '-' }}
+    </td>
+  </tr>
 </table>
-
-
 
 </body>
 </html>

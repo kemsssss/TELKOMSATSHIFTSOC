@@ -5,6 +5,90 @@
     <title>Data Berita Acara Shift</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('css/table.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #880000;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            font-size: 14px;
+            color: #1a1a1a;
+        }
+
+        thead {
+            background-color: #d70000;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 13px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #28a745;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .btn-print {
+            background-color: #007bff;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 13px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            .btn {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -12,7 +96,7 @@
         @include('components.sidebar')
     </div>
 
-    <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
+    <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555;"></div>
 
     <div class="main-content">
         <h1>Tabel Berita Acara Shift SOC Telkomsat</h1>
@@ -44,60 +128,51 @@
                 </thead>
                 <tbody>
                     @foreach ($beritaAcaras as $index => $data)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') }}</td>
+                        @php
+                            $maxRows = max(count($data->petugasLama), count($data->petugasBaru));
+                        @endphp
 
-                            {{-- Petugas Lama --}}
-                            <td>
-                                @foreach ($data->petugasLama as $petugas)
-                                    {{ $petugas->nama }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($data->petugasLama as $petugas)
-                                    {{ $petugas->nik }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($data->petugasLama as $petugas)
-                                    {{ $data->lama_shift }}<br>
-                                @endforeach
-                            </td>
+                        @for ($i = 0; $i < $maxRows; $i++)
+                            <tr @if ($i === 0) style="border-top: 3px solid #880000;" @endif>
+                                {{-- NO & TANGGAL hanya sekali di baris pertama --}}
+                                @if ($i === 0)
+                                    <td rowspan="{{ $maxRows }}">{{ $index + 1 }}</td>
+                                    <td rowspan="{{ $maxRows }}">{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') }}</td>
+                                @endif
 
-                            {{-- Petugas Baru --}}
-                            <td>
-                                @foreach ($data->petugasBaru as $petugas)
-                                    {{ $petugas->nama }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($data->petugasBaru as $petugas)
-                                    {{ $petugas->nik }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($data->petugasBaru as $petugas)
-                                    {{ $data->baru_shift }}<br>
-                                @endforeach
-                            </td>
+                                {{-- PETUGAS LAMA --}}
+                                <td>{{ $data->petugasLama[$i]->nama ?? '-' }}</td>
+                                <td>{{ $data->petugasLama[$i]->nik ?? '-' }}</td>
+                                @if ($i === 0)
+                                    <td rowspan="{{ $maxRows }}">{{ $data->lama_shift }}</td>
+                                @endif
 
-                            {{-- Data lainnya --}}
-                            <td>{!! nl2br(e($data->tiket)) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->sangfor))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->jtn))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->web))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->checkpoint))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->sophos_ip))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->sophos_url))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->vpn))) !!}</td>
-                            <td>{!! nl2br(str_replace(',', "\n", e($data->edr))) !!}</td>
-                            <td>{!! nl2br(e($data->daily_report)) !!}</td>
-                            <td class="actions">
-                                <a href="{{ route('beritaacara.edit', $data->id) }}" class="btn btn-edit">Edit</a>
-                                <a href="{{ route('beritaacara.print', $data->id) }}" class="btn btn-print" target="_blank">Print</a>
-                            </td>
-                        </tr>
+                                {{-- PETUGAS BARU --}}
+                                <td>{{ $data->petugasBaru[$i]->nama ?? '-' }}</td>
+                                <td>{{ $data->petugasBaru[$i]->nik ?? '-' }}</td>
+                                @if ($i === 0)
+                                    <td rowspan="{{ $maxRows }}">{{ $data->baru_shift }}</td>
+
+                                    {{-- KOLOM TEKNOLOGI --}}
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(e($data->tiket)) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->sangfor))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->jtn))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->web))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->checkpoint))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->sophos_ip))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->sophos_url))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->vpn))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->edr))) !!}</td>
+                                    <td rowspan="{{ $maxRows }}">{!! nl2br(e($data->daily_report)) !!}</td>
+
+                                    {{-- AKSI --}}
+                                    <td rowspan="{{ $maxRows }}">
+                                        <a href="{{ route('beritaacara.edit', $data->id) }}" class="btn btn-edit">Edit</a><br>
+                                        <a href="{{ route('beritaacara.print', $data->id) }}" class="btn btn-print" target="_blank">Print</a>
+                                    </td>
+                                @endif
+                            </tr>
+                        @endfor
                     @endforeach
                 </tbody>
             </table>

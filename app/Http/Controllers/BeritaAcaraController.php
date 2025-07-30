@@ -31,11 +31,22 @@ public function cetakPDF(Request $request)
     $petugasLama = Petugas::whereIn('id', $validated['petugas_lama'])->get();
     $petugasBaru = Petugas::whereIn('id', $validated['petugas_baru'])->get();
 
-    $lama_ttd = $this->getBase64FromStorage($petugasLama[0]->ttd ?? null);
-    $baru_ttd = $this->getBase64FromStorage($petugasBaru[0]->ttd ?? null);
+    // Ambil ID terakhir yg dipilih
+    $lastPetugasLamaId = end($validated['petugas_lama']);
+    $lastPetugasBaruId = end($validated['petugas_baru']);
+
+    // Temukan petugas berdasarkan ID
+    $lastPetugasLama = $petugasLama->firstWhere('id', $lastPetugasLamaId);
+    $lastPetugasBaru = $petugasBaru->firstWhere('id', $lastPetugasBaruId);
+
+    // TTD
+    $lama_ttd = $lastPetugasLama && $lastPetugasLama->ttd ? $this->getBase64FromStorage($lastPetugasLama->ttd) : null;
+    $baru_ttd = $lastPetugasBaru && $lastPetugasBaru->ttd ? $this->getBase64FromStorage($lastPetugasBaru->ttd) : null;
+
+    // Logo
     $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
 
-    // Simpan ke DB (ambil petugas pertama sebagai perwakilan untuk disimpan)
+    // Simpan ke DB
     $beritaAcara = BeritaAcara::create([
         'lama_shift'     => $validated['lama_shift'],
         'baru_shift'     => $validated['baru_shift'],
@@ -52,22 +63,16 @@ public function cetakPDF(Request $request)
         'daily_report'   => implode("\n", $request->input('magnus', [])),
     ]);
 
-    // Simpan relasi ke pivot
     $beritaAcara->petugasLama()->attach($validated['petugas_lama']);
     $beritaAcara->petugasBaru()->attach($validated['petugas_baru']);
 
-    // Ambil data petugas untuk PDF
-    $petugasLama = Petugas::whereIn('id', $validated['petugas_lama'])->get();
-    $petugasBaru = Petugas::whereIn('id', $validated['petugas_baru'])->get();
-
-    $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
-
+    // Data untuk PDF
     $data = [
         'petugas_lama'   => $petugasLama,
         'petugas_baru'   => $petugasBaru,
         'lama_shift'     => $validated['lama_shift'],
         'baru_shift'     => $validated['baru_shift'],
-        'tanggal_shift'  => $request->input('tanggal_shift'),
+        'tanggal_shift'  => $validated['tanggal_shift'],
         'tiket_nomor'    => $request->input('tiket_nomor'),
         'sangfor'        => $request->input('soar_sangfor'),
         'fortijtn'       => $request->input('soar_fortijtn'),
@@ -80,11 +85,19 @@ public function cetakPDF(Request $request)
         'magnus'         => $request->input('magnus', []),
         'lama_ttd'       => $lama_ttd,
         'baru_ttd'       => $baru_ttd,
+        'lama_nama'      => $lastPetugasLama->nama ?? '-',
+        'lama_nik'       => $lastPetugasLama->nik ?? '-',
+        'baru_nama'      => $lastPetugasBaru->nama ?? '-',
+        'baru_nik'       => $lastPetugasBaru->nik ?? '-',
         'logo'           => $logo,
     ];
 
     return Pdf::loadView('berita-acara', $data)->stream('serah-terima-shift-SOC.pdf');
 }
+
+
+
+
 
 
     public function print($id)

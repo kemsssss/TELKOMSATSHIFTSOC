@@ -23,7 +23,6 @@
         
         <h1>BERITA ACARA</h1>
         <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
-        <h2>SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
         <form action="{{ route('generate.pdf') }}" method="POST">
           @csrf
           
@@ -144,33 +143,34 @@
         @csrf
         
 
-    <label>Petugas Lama:</label>
-    <select id="petugas_lama" name="petugas_lama_id" class="border rounded p-2" required>
-        <option value="">Pilih Petugas Lama</option>
-        @foreach($petugas as $p)
-            <option value="{{ $p->id }}">{{ $p->nama }}</option>
-        @endforeach
-    </select>
+<label>Petugas Lama:</label>
+<select id="petugas_lama" name="petugas_lama[]" class="border rounded p-2" required>
+    <option value="">Pilih Petugas Lama</option>
+    @foreach($petugas as $p)
+        <option value="{{ $p->id }}" data-nik="{{ $p->nik }}">{{ $p->nama }}</option>
+    @endforeach
+</select>
 
-    <!-- Preview info petugas lama -->
-    <div id="info_petugas_lama" class="mt-2">
-        <p><strong>NIK:</strong> <span id="nik_lama"></span></p>
-</p>
-    </div>
+<!-- Preview info petugas lama -->
+<div id="info_petugas_lama" class="mt-2">
+    <p><strong>NIK:</strong> <span id="nik_lama"></span></p>
+</div>
 
+<br>
 
-    <label>Petugas Baru:</label>
-    <select id="petugas_baru" name="petugas_baru_id" class="border rounded p-2" required>
-        <option value="">Pilih Petugas Baru</option>
-        @foreach($petugas as $p)
-            <option value="{{ $p->id }}">{{ $p->nama }}</option>
-        @endforeach
-    </select>
+<label>Petugas Baru:</label>
+<select id="petugas_baru" name="petugas_baru[]" class="border rounded p-2" required>
+    <option value="">Pilih Petugas Baru</option>
+    @foreach($petugas as $p)
+        <option value="{{ $p->id }}" data-nik="{{ $p->nik }}">{{ $p->nama }}</option>
+    @endforeach
+</select>
 
-    <!-- Preview info petugas baru -->
-    <div id="info_petugas_baru" class="mt-2">
-        <p><strong>NIK:</strong> <span id="nik_baru"></span></p>
-    </div>
+<!-- Preview info petugas baru -->
+<div id="info_petugas_baru" class="mt-2">
+    <p><strong>NIK:</strong> <span id="nik_baru"></span></p>
+</div>
+
 
         
 <button type="submit" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
@@ -183,115 +183,98 @@
     </div>
     </div>
 
-      <script>
-        function setupDynamicInput(groupId, inputName) {
-          const group = document.getElementById(groupId);
+<script>
+// 1. Input dinamis (tekan Enter)
+function setupDynamicInput(groupId, inputName) {
+  const group = document.getElementById(groupId);
 
-          group.addEventListener('keydown', function (e) {
-            if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
-              e.preventDefault();
+  group.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
+      e.preventDefault();
 
-              if (e.target.value.trim() === '') return;
+      if (e.target.value.trim() === '') return;
 
-              const wrapper = document.createElement('div');
-              wrapper.className = 'input-wrapper';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'input-wrapper';
 
-              const newInput = document.createElement('input');
-              newInput.type = 'text';
-              newInput.name = inputName + '[]';
-              newInput.placeholder = e.target.placeholder;
+      const newInput = document.createElement('input');
+      newInput.type = 'text';
+      newInput.name = inputName + '[]';
+      newInput.placeholder = e.target.placeholder;
+      newInput.className = e.target.className;
 
-              const deleteBtn = document.createElement('button');
-              deleteBtn.className = 'delete-btn';
-              deleteBtn.innerHTML = '🗑️';
-              deleteBtn.type = 'button';
-              deleteBtn.onclick = () => group.removeChild(wrapper);
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-btn ml-2 text-red-500';
+      deleteBtn.innerHTML = '🗑️';
+      deleteBtn.type = 'button';
+      deleteBtn.onclick = () => group.removeChild(wrapper);
 
-              wrapper.appendChild(newInput);
-              wrapper.appendChild(deleteBtn);
-              group.appendChild(wrapper);
+      wrapper.appendChild(newInput);
+      wrapper.appendChild(deleteBtn);
+      group.appendChild(wrapper);
 
-              newInput.focus();
-            }
-          });
-        }
-
-        setupDynamicInput('sophos-ip-group', 'sophos_ip');
-        setupDynamicInput('sophos-url-group', 'sophos_url');
-        setupDynamicInput('vpn-group', 'vpn');
-        setupDynamicInput('edr-group', 'edr');
-        setupDynamicInput('magnus-group', 'magnus');
-      </script>
-
-    <script>
-    document.getElementById('petugas_lama').addEventListener('change', function () {
-        let id = this.value;
-        if (!id) return;
-
-        fetch(`/petugas/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('nik_lama').innerText = data.nik;
-                document.getElementById('ttd_lama').src = `/${data.ttd}`;
-            });
-    });
-    </script>
-    <script>
-    function fetchPetugas(id, targetNik, targetTtd) {
-        if (!id) return;
-        fetch(`/petugas/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById(targetNik).innerText = data.nik;
-                document.getElementById(targetTtd).src = `/${data.ttd}`;
-            });
+      newInput.focus();
     }
+  });
+}
 
-    document.getElementById('petugas_lama').addEventListener('change', function () {
-        fetchPetugas(this.value, 'nik_lama', 'ttd_lama');
-    });
-    document.getElementById('petugas_baru').addEventListener('change', function () {
-        fetchPetugas(this.value, 'nik_baru', 'ttd_baru');
-    });
-    </script>
-
-
-
-
-
-    <script>
-    document.getElementById('petugas_lama').addEventListener('change', function () {
-        let id = this.value;
-        if (!id) return;
-
-        fetch(`/petugas/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('nik_lama').innerText = data.nik;
-                document.getElementById('ttd_lama').src = `/${data.ttd}`;
-            });
-    });
-    </script>
+setupDynamicInput('sophos-ip-group', 'sophos_ip');
+setupDynamicInput('sophos-url-group', 'sophos_url');
+setupDynamicInput('vpn-group', 'vpn');
+setupDynamicInput('edr-group', 'edr');
+setupDynamicInput('magnus-group', 'magnus');
+</script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    function updateJam() {
-        const jamElement = document.getElementById('jam');
-        const now = new Date();
+// 2. Fetch data petugas (NIK dan TTD) dinamis
+function fetchPetugas(id, targetNik, targetTtd) {
+  if (!id) return;
+  fetch(`/petugas/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById(targetNik).innerText = data.nik || '-';
+      if (targetTtd && data.ttd) {
+        document.getElementById(targetTtd).src = `/${data.ttd}`;
+      }
+    })
+    .catch(() => {
+      document.getElementById(targetNik).innerText = '-';
+      if (targetTtd) {
+        document.getElementById(targetTtd).src = '';
+      }
+    });
+}
 
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const tanggal = now.toLocaleDateString('id-ID', options);
-        const waktu = now.toLocaleTimeString('id-ID');
+document.getElementById('petugas_lama').addEventListener('change', function () {
+  fetchPetugas(this.value, 'nik_lama', 'ttd_lama');
+});
 
-        jamElement.textContent = `${tanggal} - ${waktu}`;
-    }
-
-    setInterval(updateJam, 1000);
-    updateJam(); // pertama kali
+document.getElementById('petugas_baru').addEventListener('change', function () {
+  fetchPetugas(this.value, 'nik_baru', 'ttd_baru');
 });
 </script>
 
 <script>
+// 3. Update jam dan tanggal realtime
+document.addEventListener('DOMContentLoaded', function () {
+  function updateJam() {
+    const jamElement = document.getElementById('jam');
+    const now = new Date();
+
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const tanggal = now.toLocaleDateString('id-ID', options);
+    const waktu = now.toLocaleTimeString('id-ID');
+
+    jamElement.textContent = `${tanggal} - ${waktu}`;
+  }
+
+  setInterval(updateJam, 1000);
+  updateJam(); // pertama kali
+});
+</script>
+
+<script>
+// 4. Tambah input petugas secara dinamis
 function tambahInput(wrapperId, name) {
   const wrapper = document.getElementById(wrapperId);
   const div = document.createElement("div");
@@ -311,6 +294,7 @@ function hapusInput(button) {
   button.parentElement.remove();
 }
 </script>
+
 
 
 
