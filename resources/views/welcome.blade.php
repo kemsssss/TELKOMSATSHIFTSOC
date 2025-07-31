@@ -52,9 +52,6 @@
             <option value="3 (22:30 - 06:30)">3 (22:30 - 06:30)</option>
           </select>
           
-          
-          
-          
           <!-- Petugas Baru -->
           <div class="mb-4">
             <label class="block text-sm font-bold mb-1">Petugas Baru</label>
@@ -137,11 +134,7 @@
 
     <div class="section">
       <p>Demikian berita acara ini dibuat dengan sebenar-benarnya sebagai bukti telah dilakukan serah terima shift SOC Telkomsat.</p>
-    </div>
-
-    <form action="{{ route('generate.pdf') }}" method="POST">
-        @csrf
-        
+    </div>        
 
 <label>Petugas Lama:</label>
 <select id="petugas_lama" name="petugas_lama[]" class="border rounded p-2" required>
@@ -170,8 +163,6 @@
 <div id="info_petugas_baru" class="mt-2">
     <p><strong>NIK:</strong> <span id="nik_baru"></span></p>
 </div>
-
-
         
 <button type="submit" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
   Simpan
@@ -294,11 +285,5 @@ function hapusInput(button) {
   button.parentElement.remove();
 }
 </script>
-
-
-
-
-
-
     </body>
     </html>

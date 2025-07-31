@@ -127,54 +127,53 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($beritaAcaras as $index => $data)
-                        @php
-                            $maxRows = max(count($data->petugasLama), count($data->petugasBaru));
-                        @endphp
+                @foreach ($beritaAcaras as $index => $data)
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $data->created_at->format('d-m-Y') }}</td>
 
-                        @for ($i = 0; $i < $maxRows; $i++)
-                            <tr @if ($i === 0) style="border-top: 3px solid #880000;" @endif>
-                                {{-- NO & TANGGAL hanya sekali di baris pertama --}}
-                                @if ($i === 0)
-                                    <td rowspan="{{ $maxRows }}">{{ $index + 1 }}</td>
-                                    <td rowspan="{{ $maxRows }}">{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') }}</td>
-                                @endif
+      {{-- Petugas Lama --}}
+<td>
+    {!! $data->petugasLama->pluck('nama')->unique()->implode('<br>') !!}
+</td>
+<td>
+    {!! $data->petugasLama->pluck('nik')->unique()->implode('<br>') !!}
+</td>
+<td>
+    {!! $data->lama_shift !!}
+</td>
 
-                                {{-- PETUGAS LAMA --}}
-                                <td>{{ $data->petugasLama[$i]->nama ?? '-' }}</td>
-                                <td>{{ $data->petugasLama[$i]->nik ?? '-' }}</td>
-                                @if ($i === 0)
-                                    <td rowspan="{{ $maxRows }}">{{ $data->lama_shift }}</td>
-                                @endif
+{{-- Petugas Baru --}}
+<td>
+    {!! $data->petugasBaru->pluck('nama')->unique()->implode('<br>') !!}
+</td>
+<td>
+    {!! $data->petugasBaru->pluck('nik')->unique()->implode('<br>') !!}
+</td>
+<td>
+    {!! $data->baru_shift !!}
+</td>
 
-                                {{-- PETUGAS BARU --}}
-                                <td>{{ $data->petugasBaru[$i]->nama ?? '-' }}</td>
-                                <td>{{ $data->petugasBaru[$i]->nik ?? '-' }}</td>
-                                @if ($i === 0)
-                                    <td rowspan="{{ $maxRows }}">{{ $data->baru_shift }}</td>
+        {{-- Tiket dan blok --}}
+        <td>{!! nl2br(e($data->tiket)) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->sangfor))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->jtn))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->web))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->checkpoint))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->sophos_ip))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->sophos_url))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->vpn))) !!}</td>
+        <td>{!! nl2br(str_replace(',', "\n", e($data->edr))) !!}</td>
+        <td>{!! nl2br(e($data->daily_report)) !!}</td>
 
-                                    {{-- KOLOM TEKNOLOGI --}}
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(e($data->tiket)) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->sangfor))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->jtn))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->web))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->checkpoint))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->sophos_ip))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->sophos_url))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->vpn))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(str_replace(',', "\n", e($data->edr))) !!}</td>
-                                    <td rowspan="{{ $maxRows }}">{!! nl2br(e($data->daily_report)) !!}</td>
+        <td>
+            <a href="{{ route('beritaacara.edit', $data->id) }}" class="btn btn-edit">Edit</a><br>
+            <a href="{{ route('beritaacara.print', $data->id) }}" class="btn btn-print" target="_blank">Print</a>
+        </td>
+    </tr>
+@endforeach
+</tbody>
 
-                                    {{-- AKSI --}}
-                                    <td rowspan="{{ $maxRows }}">
-                                        <a href="{{ route('beritaacara.edit', $data->id) }}" class="btn btn-edit">Edit</a><br>
-                                        <a href="{{ route('beritaacara.print', $data->id) }}" class="btn btn-print" target="_blank">Print</a>
-                                    </td>
-                                @endif
-                            </tr>
-                        @endfor
-                    @endforeach
-                </tbody>
             </table>
         </div>
     </div>

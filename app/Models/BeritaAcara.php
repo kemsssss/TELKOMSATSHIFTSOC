@@ -41,11 +41,11 @@ class BeritaAcara extends Model
 
     public function petugasLama()
 {
-    return $this->belongsToMany(Petugas::class, 'berita_acara_petugas_lama')->withPivot('shift');
+    return $this->belongsToMany(Petugas::class, 'berita_acara_petugas_lama')->withPivot('shift')->withTimestamps();;
 }
 
 public function petugasBaru()
 {
-    return $this->belongsToMany(Petugas::class, 'berita_acara_petugas_baru')->withPivot('shift');
+    return $this->belongsToMany(Petugas::class, 'berita_acara_petugas_baru')->withPivot('shift')->withTimestamps();;
 }
 }

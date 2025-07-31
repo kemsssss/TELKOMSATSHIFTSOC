@@ -46,6 +46,15 @@ public function cetakPDF(Request $request)
     // Logo
     $logo = $this->getBase64FromStorage('logotelkomsat/Logo-Telkomsat.png');
 
+    $cekDuplikat = BeritaAcara::where('tanggal_shift', $validated['tanggal_shift'])
+        ->where('lama_shift', $validated['lama_shift'])
+        ->where('baru_shift', $validated['baru_shift'])
+        ->first();
+
+    if ($cekDuplikat) {
+        return redirect()->back()->with('error', 'Data shift ini sudah pernah disimpan.');
+    }
+
     // Simpan ke DB
     $beritaAcara = BeritaAcara::create([
         'lama_shift'     => $validated['lama_shift'],
@@ -63,8 +72,8 @@ public function cetakPDF(Request $request)
         'daily_report'   => implode("\n", $request->input('magnus', [])),
     ]);
 
-    $beritaAcara->petugasLama()->attach($validated['petugas_lama']);
-    $beritaAcara->petugasBaru()->attach($validated['petugas_baru']);
+    $beritaAcara->petugasLama()->sync($validated['petugas_lama']);
+    $beritaAcara->petugasBaru()->sync($validated['petugas_baru']);
 
     // Data untuk PDF
     $data = [
@@ -94,12 +103,6 @@ public function cetakPDF(Request $request)
 
     return Pdf::loadView('berita-acara', $data)->stream('serah-terima-shift-SOC.pdf');
 }
-
-
-
-
-
-
     public function print($id)
     {
         $beritaAcara = BeritaAcara::with(['petugasLama', 'petugasBaru'])->findOrFail($id);
