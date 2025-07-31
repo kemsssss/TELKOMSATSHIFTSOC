@@ -31,18 +31,19 @@
           <!-- Petugas Lama -->
           <div class="mb-4">
             <label class="block text-sm font-bold mb-1">Petugas Lama</label>
-            <div id="petugasLamaWrapper">
-              <div class="flex items-center mb-2">
-                <select name="petugas_lama[]" class="form-select">
-                  @foreach($petugas as $p)
-                    <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
-                  @endforeach
-                </select>
-                <button type="button" class="ml-2 text-red-500" onclick="hapusInput(this)">Hapus</button>
-              </div>
-            </div>
-            <button type="button" class="mt-2 text-blue-500" onclick="tambahInput('petugasLamaWrapper', 'petugas_lama[]')">+ Tambah Petugas Lama</button>
-          </div>
+<div id="petugasLamaWrapper">
+  <div class="input-wrapper">
+    <select name="petugas_lama[]" class="select-petugas">
+      @foreach ($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+      @endforeach
+    </select>
+    <button type="button" class="btn-hapus" onclick="hapusInput(this)">Hapus</button>
+  </div>
+</div>
+
+<button type="button" class="btn-tambah" onclick="tambahInput('petugasLamaWrapper', 'petugas_lama[]')">+ Tambah Petugas Lama</button>
+
           
           <label>Shift Petugas Lama</label>
           <select name="lama_shift" required>
@@ -55,18 +56,19 @@
           <!-- Petugas Baru -->
           <div class="mb-4">
             <label class="block text-sm font-bold mb-1">Petugas Baru</label>
-            <div id="petugasBaruWrapper">
-              <div class="flex items-center mb-2">
-                <select name="petugas_baru[]" class="form-select">
-                  @foreach($petugas as $p)
-                    <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
-                  @endforeach
-                </select>
-                <button type="button" class="ml-2 text-red-500" onclick="hapusInput(this)">Hapus</button>
-              </div>
-            </div>
-            <button type="button" class="mt-2 text-blue-500" onclick="tambahInput('petugasBaruWrapper', 'petugas_baru[]')">+ Tambah Petugas Baru</button>
-          </div>
+<div id="petugasBaruWrapper">
+  <div class="input-wrapper">
+    <select name="petugas_baru[]" class="select-petugas">
+      @foreach ($petugas as $p)
+        <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+      @endforeach
+    </select>
+    <button type="button" class="btn-hapus" onclick="hapusInput(this)" style="display: none;">Hapus</button>
+  </div>
+</div>
+
+<button type="button" class="btn-tambah" onclick="tambahInput('petugasBaruWrapper', 'petugas_baru[]')">+ Tambah Petugas Baru</button>
+
 
 <label>Shift Petugas Baru</label>
 <select name="baru_shift" required>
@@ -285,5 +287,56 @@ function hapusInput(button) {
   button.parentElement.remove();
 }
 </script>
+
+<script>
+  function tambahInput(wrapperId, name) {
+    const wrapper = document.getElementById(wrapperId);
+    const firstInput = wrapper.querySelector('.input-wrapper');
+    const newInput = firstInput.cloneNode(true);
+
+    // Reset value
+    newInput.querySelector('select').value = '';
+
+    // Tampilkan tombol hapus jika lebih dari 1 kolom
+    const allInputs = wrapper.querySelectorAll('.input-wrapper');
+    allInputs.forEach(input => {
+      const btn = input.querySelector('.btn-hapus');
+      if (btn) btn.style.display = 'inline-block';
+    });
+
+    wrapper.appendChild(newInput);
+  }
+
+  function hapusInput(button) {
+    const wrapper = button.closest('#petugasBaruWrapper') || button.closest('#petugasLamaWrapper');
+    const allInputs = wrapper.querySelectorAll('.input-wrapper');
+
+    if (allInputs.length > 1) {
+      button.parentElement.remove();
+
+      // Jika setelah hapus cuma tinggal 1, sembunyikan tombol hapus yang tersisa
+      const remainingInputs = wrapper.querySelectorAll('.input-wrapper');
+      if (remainingInputs.length === 1) {
+        const btn = remainingInputs[0].querySelector('.btn-hapus');
+        if (btn) btn.style.display = 'none';
+      }
+    }
+  }
+
+  // Sembunyikan tombol hapus jika hanya satu kolom saat halaman dimuat
+  window.onload = function () {
+    ['petugasLamaWrapper', 'petugasBaruWrapper'].forEach(wrapperId => {
+      const wrapper = document.getElementById(wrapperId);
+      if (wrapper) {
+        const allInputs = wrapper.querySelectorAll('.input-wrapper');
+        if (allInputs.length === 1) {
+          const btn = allInputs[0].querySelector('.btn-hapus');
+          if (btn) btn.style.display = 'none';
+        }
+      }
+    });
+  }
+</script>
+
     </body>
     </html>

@@ -36,7 +36,6 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
         }
         label {
             font-weight: 600;
@@ -44,7 +43,9 @@
             display: block;
             color: #1f2937;
         }
-        input[type="text"], textarea {
+        input[type="text"],
+        input[type="date"],
+        textarea {
             width: 100%;
             padding: 12px;
             margin-top: 6px;
@@ -52,18 +53,14 @@
             border-radius: 8px;
             resize: vertical;
             font-size: 14px;
-            transition: 0.3s;
         }
-        input:focus, textarea:focus {
-            border-color: #0d6efd;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
-        }
-        textarea { height: 80px; }
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
+        }
+        .multi-input {
+            margin-bottom: 10px;
         }
         button {
             background-color: #0d6efd;
@@ -75,15 +72,13 @@
             margin-top: 30px;
             font-size: 16px;
             width: 100%;
-            transition: background 0.3s;
         }
         button:hover {
             background-color: #094cba;
         }
-        @media screen and (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 15px; }
-            form { padding: 20px; }
+        .btn-tambah {
+            background: #10b981;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -93,45 +88,53 @@
     @include('components.sidebar')
 </div>
 
-      <div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
-      <div id="jam"></div>
+<div id="jam" style="position: absolute; top: 20px; right: 30px; font-size: 14px; color: #555; z-index: 9999;"></div>
 
 <div class="main-content">
-    <h1>📝 Edit Data Berita Acara Shift</h1>
+    <h1>📜 Edit Data Berita Acara Shift</h1>
 
     <form action="{{ route('beritaacara.update', $beritaAcara->id) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <div class="form-row">
-            <div>
-                <label for="lama_nama">👤 Petugas Lama</label>
-                <input type="text" id="lama_nama" name="lama_nama" value="{{ $beritaAcara->lama_nama }}" required>
-            </div>
-            <div>
-                <label for="lama_nik">🆔 NIK Lama</label>
-                <input type="text" id="lama_nik" name="lama_nik" value="{{ $beritaAcara->lama_nik }}" required>
-            </div>
-            <div>
-                <label for="baru_nama">👤 Petugas Baru</label>
-                <input type="text" id="baru_nama" name="baru_nama" value="{{ $beritaAcara->baru_nama }}" required>
-            </div>
-            <div>
-                <label for="baru_nik">🆔 NIK Baru</label>
-                <input type="text" id="baru_nik" name="baru_nik" value="{{ $beritaAcara->baru_nik }}" required>
-            </div>
-        </div>
+<div class="mb-3">
+  <label for="tanggal" class="form-label">Tanggal</label>
+  <input type="date" class="form-control" id="tanggal" name="tanggal"
+  value="{{ old('tanggal', \Carbon\Carbon::parse($beritaAcara->tanggal)->format('Y-m-d')) }}">
 
-        <div class="form-row">
-            <div>
-                <label for="lama_shift">⏰ Shift</label>
-                <input type="text" id="lama_shift" name="lama_shift" value="{{ $beritaAcara->lama_shift }}" required>
-            </div>
-            <div>
-                <label for="tiket">🎫 No Tiket</label>
-                <textarea name="tiket" id="tiket">{{ $beritaAcara->tiket }}</textarea>
-            </div>
+</div>
+
+
+        <hr><h3>Petugas Lama</h3>
+        <div id="petugasLamaContainer">
+            @foreach ($beritaAcara->petugasLama as $petugas)
+                <div class="form-row multi-input">
+                    <input type="text" name="nama_lama[]" value="{{ $petugas->nama }}" placeholder="Nama Petugas Lama" required>
+                    <input type="text" name="nik_lama[]" value="{{ $petugas->nik }}" placeholder="NIK Lama" required>
+                </div>
+            @endforeach
         </div>
+        <button type="button" class="btn-tambah" onclick="tambahPetugas('Lama')">+ Tambah Petugas Lama</button>
+
+        <label for="lama_shift">⏰ Shift Petugas Lama</label>
+        <input type="text" id="lama_shift" name="lama_shift" value="{{ $beritaAcara->lama_shift }}" required>
+
+        <hr><h3>Petugas Baru</h3>
+        <div id="petugasBaruContainer">
+            @foreach ($beritaAcara->petugasBaru as $petugas)
+                <div class="form-row multi-input">
+                    <input type="text" name="nama_baru[]" value="{{ $petugas->nama }}" placeholder="Nama Petugas Baru" required>
+                    <input type="text" name="nik_baru[]" value="{{ $petugas->nik }}" placeholder="NIK Baru" required>
+                </div>
+            @endforeach
+        </div>
+        <button type="button" class="btn-tambah" onclick="tambahPetugas('Baru')">+ Tambah Petugas Baru</button>
+
+        <label for="baru_shift">⏰ Shift Petugas Baru</label>
+        <input type="text" id="baru_shift" name="baru_shift" value="{{ $beritaAcara->baru_shift }}" required>
+
+        <label for="tiket">🎫 No Tiket</label>
+        <textarea name="tiket" id="tiket">{{ $beritaAcara->tiket }}</textarea>
 
         <div class="form-row">
             <div>
@@ -183,21 +186,27 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    function updateJam() {
-        const jamElement = document.getElementById('jam');
-        const now = new Date();
+function tambahPetugas(tipe) {
+    const container = document.getElementById(`petugas${tipe}Container`);
+    const div = document.createElement('div');
+    div.classList.add('form-row', 'multi-input');
+    div.innerHTML = `
+        <input type="text" name="nama_${tipe.toLowerCase()}[]" placeholder="Nama Petugas ${tipe}" required>
+        <input type="text" name="nik_${tipe.toLowerCase()}[]" placeholder="NIK ${tipe}" required>
+    `;
+    container.appendChild(div);
+}
 
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const tanggal = now.toLocaleDateString('id-ID', options);
-        const waktu = now.toLocaleTimeString('id-ID');
-
-        jamElement.textContent = `${tanggal} - ${waktu}`;
-    }
-
-    setInterval(updateJam, 1000);
-    updateJam(); // pertama kali
-});
+function updateJam() {
+    const jamElement = document.getElementById('jam');
+    const now = new Date();
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const tanggal = now.toLocaleDateString('id-ID', options);
+    const waktu = now.toLocaleTimeString('id-ID');
+    jamElement.textContent = `${tanggal} - ${waktu}`;
+}
+setInterval(updateJam, 1000);
+updateJam();
 </script>
 
 </body>

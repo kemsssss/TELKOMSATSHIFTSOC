@@ -5,6 +5,49 @@
     box-sizing: border-box;
   }
 
+  .btn-tambah {
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 6px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-tambah:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-hapus {
+    background-color: #dc3545;
+    color: white;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-hapus:hover {
+    background-color: #a71d2a;
+  }
+
+  .select-petugas {
+    padding: 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .input-wrapper {
+    margin-bottom: 10px;
+  }
+
    body {
       margin: 0;
       font-family: Arial, sans-serif;
