@@ -35,7 +35,7 @@
   <div class="input-wrapper">
     <select name="petugas_lama[]" class="select-petugas">
       @foreach ($petugas as $p)
-        <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+        <option value="{{ $p->id }}">{{ $p->nama }}</option>
       @endforeach
     </select>
     <button type="button" class="btn-hapus" onclick="hapusInput(this)">Hapus</button>
@@ -60,7 +60,7 @@
   <div class="input-wrapper">
     <select name="petugas_baru[]" class="select-petugas">
       @foreach ($petugas as $p)
-        <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->nik }})</option>
+        <option value="{{ $p->id }}">{{ $p->nama }} </option>
       @endforeach
     </select>
     <button type="button" class="btn-hapus" onclick="hapusInput(this)" style="display: none;">Hapus</button>

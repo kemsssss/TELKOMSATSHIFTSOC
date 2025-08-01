@@ -34,7 +34,7 @@
     }
 
     .logo img {
-      height: 60px;
+      height: 100px;
     }
 
     .section {
@@ -79,7 +79,7 @@
 <body>
 
 @php
-  $logoPath = public_path('storage/logotelkomsat/Logo-Telkomsat.png');
+  $logoPath = public_path('storage/logotelkomsat/logotelkomsattt.png');
   $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : null;
 @endphp
 

@@ -156,33 +156,50 @@ public function cetakPDF(Request $request) {
         return view('table', compact('beritaAcaras'));
     }
 
-    public function edit($id)
-    {
-        $beritaAcara = BeritaAcara::findOrFail($id);
-        $petugas = Petugas::all(); // Ambil semua petugas
-        return view('edittable', compact('beritaAcara'));
+public function edit($id)
+{
+    $beritaAcara = BeritaAcara::findOrFail($id);
+    $petugas = Petugas::all(); // Ambil semua petugas
+    return view('edittable', compact('beritaAcara', 'petugas'));
+}
+
+
+public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'tiket'        => 'nullable|string',
+        'sangfor'      => 'nullable|string',
+        'jtn'          => 'nullable|string',
+        'web'          => 'nullable|string',
+        'checkpoint'   => 'nullable|string',
+        'sophos_ip'    => 'nullable|string',
+        'sophos_url'   => 'nullable|string',
+        'vpn'          => 'nullable|string',
+        'edr'          => 'nullable|string',
+        'daily_report' => 'nullable|string',
+        'petugas_lama' => 'nullable|array',
+        'petugas_baru' => 'nullable|array',
+        'lama_shift'   => 'nullable|string',
+        'baru_shift'   => 'nullable|string',
+        'tanggal_shift' => 'nullable|date',
+    ]);
+
+    $beritaAcara = BeritaAcara::findOrFail($id);
+    $beritaAcara->update($validated);
+
+    // Sinkronisasi petugas lama
+    if ($request->filled('petugas_lama')) {
+        $beritaAcara->petugasLama()->sync($request->petugas_lama);
     }
 
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'tiket'        => 'nullable|string',
-            'sangfor'      => 'nullable|string',
-            'jtn'          => 'nullable|string',
-            'web'          => 'nullable|string',
-            'checkpoint'   => 'nullable|string',
-            'sophos_ip'    => 'nullable|string',
-            'sophos_url'   => 'nullable|string',
-            'vpn'          => 'nullable|string',
-            'edr'          => 'nullable|string',
-            'daily_report' => 'nullable|string',
-        ]);
-
-        $beritaAcara = BeritaAcara::findOrFail($id);
-        $beritaAcara->update($validated);
-
-        return redirect()->route('table')->with('success', 'Data Berita Acara berhasil diperbarui.');
+    // Sinkronisasi petugas baru
+    if ($request->filled('petugas_baru')) {
+        $beritaAcara->petugasBaru()->sync($request->petugas_baru);
     }
+
+    return redirect()->route('table')->with('success', 'Data Berita Acara berhasil diperbarui.');
+}
+
 
     private function getBase64FromStorage($relativePath)
     {
