@@ -18,16 +18,10 @@
       
 
       <div class="container">
-        @php
-  $logoPath = public_path('storage/logotelkomsat/logotelkomsattt.png');
-  $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : null;
-@endphp
-
-@if($logoBase64)
-  <div class="logo">
-    <img src="{{ $logoBase64 }}" alt="Logo Telkomsat">
-  </div>
-@endif
+    <!-- Logo -->
+    <div class="logo" style="text-align: center; margin-bottom: 20px;">
+      <img src="https://uploads.onecompiler.io/42vf4qnqm/43scvhkgf/logotelkomsattt.png" alt="Logo Telkomsat" style="height: 100px;">
+    </div>
         
         
         <h1>BERITA ACARA</h1>

@@ -89,7 +89,7 @@
   </div>
 @endif
 
-<h2>BERITA ACARA SERAH TERIMA SHIFT SOC TELKOMSAT</h2>
+<h2>BERITA ACARA SERAH TERIMA SHIFT SOC  <span style="color: red;">TELKOMSAT</span></h2>
 
 <div class="section">
   <p><strong>Yang bertanda tangan di bawah ini:</strong></p>
