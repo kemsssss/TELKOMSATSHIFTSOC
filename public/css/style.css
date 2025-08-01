@@ -1,4 +1,13 @@
 /* Reset and Base Styles */
+
+    .logo {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .logo img {
+      height: 100px;
+    }
 * {
     margin: 0;
     padding: 0;
