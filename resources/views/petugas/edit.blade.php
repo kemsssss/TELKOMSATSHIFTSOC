@@ -30,8 +30,8 @@
                 <input type="file" name="ttd">
 
                 <div class="preview-ttd">
-                    @if ($petugas->ttd && file_exists(public_path('storage/' . $petugas->ttd)))
-                        <img src="{{ asset('storage/' . $petugas->ttd) }}" alt="TTD {{ $petugas->nama }}">
+                    @if ($petugas->ttd_path && file_exists(public_path('storage/' . $petugas->ttd_path)))
+                        <img src="{{ asset('storage/' . $petugas->ttd_path) }}" alt="TTD {{ $petugas->nama }}">
                     @else
                         <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
                     @endif

@@ -9,7 +9,7 @@ class Petugas extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama', 'nik', 'ttd'];
+    protected $fillable = ['nama', 'nik', 'ttd_path'];
 
     public function beritaAcarasSebagaiLama()
 {

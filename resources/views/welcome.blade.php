@@ -141,7 +141,7 @@
       <p>Demikian berita acara ini dibuat dengan sebenar-benarnya sebagai bukti telah dilakukan serah terima shift SOC Telkomsat.</p>
     </div>        
 
-<label>Petugas Lama:</label>
+<label>TTD Perwakilan Petugas Lama:</label>
 <select id="petugas_lama" name="petugas_lama[]" class="border rounded p-2" required>
     <option value="">Pilih Petugas Lama</option>
     @foreach($petugas as $p)
@@ -149,25 +149,16 @@
     @endforeach
 </select>
 
-<!-- Preview info petugas lama -->
-<div id="info_petugas_lama" class="mt-2">
-    <p><strong>NIK:</strong> <span id="nik_lama"></span></p>
-</div>
 
 <br>
 
-<label>Petugas Baru:</label>
+<label>TTD Perwakilan Petugas Baru:</label>
 <select id="petugas_baru" name="petugas_baru[]" class="border rounded p-2" required>
     <option value="">Pilih Petugas Baru</option>
     @foreach($petugas as $p)
         <option value="{{ $p->id }}" data-nik="{{ $p->nik }}">{{ $p->nama }}</option>
     @endforeach
 </select>
-
-<!-- Preview info petugas baru -->
-<div id="info_petugas_baru" class="mt-2">
-    <p><strong>NIK:</strong> <span id="nik_baru"></span></p>
-</div>
         
 <button type="submit" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
   Simpan

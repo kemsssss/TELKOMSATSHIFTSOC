@@ -41,11 +41,12 @@
                         <p><strong>Nama:</strong> {{ $p->nama }}</p>
                         <p><strong>NIK:</strong> {{ $p->nik }}</p>
 
-                        @if ($p->ttd && file_exists(public_path('storage/' . $p->ttd)))
-                            <img src="{{ asset('storage/' . $p->ttd) }}" alt="TTD {{ $p->nama }}">
-                        @else
-                            <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
-                        @endif
+@if ($p->ttd_path && file_exists(public_path('storage/' . $p->ttd_path)))
+    <img src="{{ asset('storage/' . $p->ttd_path) }}" alt="TTD {{ $p->nama }}">
+@else
+    <p class="text-red">TTD belum tersedia atau file tidak ditemukan.</p>
+@endif
+
 
                         <div class="actions">
                             <a href="{{ route('petugas.edit', $p->id) }}" class="btn btn-yellow">Edit</a>
