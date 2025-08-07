@@ -10,8 +10,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    nodejs \
     npm \
-    nodejs
+    bash  
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 

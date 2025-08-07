@@ -36,7 +36,7 @@ class PetugasController extends Controller
 
         $request->validate([
             'nama' => 'required',
-            'nik' => 'required|unique:petugas,nik',
+            'nik' => 'nullable|unique:petugas,nik',
             'ttd' => 'required|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 
@@ -90,11 +90,12 @@ Log::info('📂 Izin folder storage: ' . substr(sprintf('%o', fileperms(storage_
             return back()->withErrors(['ttd' => 'Gagal menyimpan file']);
         }
 
-        Petugas::create([
-            'nama' => $request->nama,
-            'nik' => $request->nik,
-            'ttd_path' => $ttdPath,
-        ]);
+Petugas::create([
+    'nama' => $request->nama,
+    'nik' => $request->nik ?? '',
+    'ttd_path' => $ttdPath,
+]);
+
 
         Log::info('✅ Data petugas berhasil disimpan');
 
@@ -113,13 +114,14 @@ Log::info('📂 Izin folder storage: ' . substr(sprintf('%o', fileperms(storage_
 
     $request->validate([
         'nama' => 'required',
-        'nik' => 'required|unique:petugas,nik,' . $id,
+        'nik' => 'nullable|unique:petugas,nik,' . $id,
         'ttd' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
     ]);
 
     $data = [
         'nama' => $request->nama,
-        'nik' => $request->nik,
+        'nik' => $request->nik ?? '',
+
     ];
 
     if ($request->hasFile('ttd')) {

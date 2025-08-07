@@ -30,14 +30,15 @@
             <form action="{{ route('petugas.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <label for="nama">Nama Petugas</label>
-                <input type="text" name="nama" id="nama" placeholder="Contoh: Budi Santoso" value="{{ old('nama') }}" required>
+<label for="nama" class="required">Nama Petugas</label>
+<input type="text" name="nama" id="nama" placeholder="Contoh: Budi Santoso" value="{{ old('nama') }}" required>
 
-                <label for="nik">NIK</label>
-                <input type="text" name="nik" id="nik" placeholder="Contoh: 1234567890123456" value="{{ old('nik') }}" required>
+<label for="nik">NIK</label>
+<input type="text" name="nik" id="nik" placeholder="Jika Tidak Ada Kosongkan Saja" value="{{ old('nik') }}">
 
-                <label for="ttd">Tanda Tangan</label>
-                <input type="file" name="ttd" id="ttd" accept="image/*" onchange="previewTTD(event)" required>
+<label for="ttd" class="required">Tanda Tangan</label>
+<input type="file" name="ttd" id="ttd" accept="image/*" onchange="previewTTD(event)" required>
+
 
                 <img id="ttd-preview" alt="Preview Tanda Tangan">
 

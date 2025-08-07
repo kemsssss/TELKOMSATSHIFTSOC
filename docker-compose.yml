@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: laravel-app
-    container_name: laravel-app
+    container_name: telkomsatsoc
     ports:
       - "9000:9000"
     volumes:
